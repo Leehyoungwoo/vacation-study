@@ -54,7 +54,6 @@ DROP TABLE IF EXISTS `Comment_likes`;
 CREATE TABLE `Comment_likes` (
   `comment_id` INT NOT NULL,
   `member_id` INT NOT NULL,
-  `is_deleted` BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (`comment_id`, `member_id`),
   KEY `fk_comment_likes_member_idx` (`member_id`),
   CONSTRAINT `fk_comment_likes_comment` FOREIGN KEY (`comment_id`) REFERENCES `Comments` (`comment_id`),
