@@ -20,7 +20,7 @@ CREATE TABLE Boards (
     title VARCHAR(100) NOT NULL,
     content TEXT NOT NULL,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    member_id INT,
+    member_id INT NOT NULL,
 	is_deleted BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -31,8 +31,8 @@ CREATE TABLE Comments (
     comment_id INT PRIMARY KEY AUTO_INCREMENT,
     content TEXT NOT NULL,
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    board_id INT,
-    member_id INT,
+    board_id INT NOT NULL,
+    member_id INT NOT NULL,
     is_deleted BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (board_id) REFERENCES Boards(board_id),
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
