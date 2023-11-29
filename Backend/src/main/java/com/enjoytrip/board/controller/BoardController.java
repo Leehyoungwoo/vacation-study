@@ -6,6 +6,8 @@ import com.enjoytrip.board.model.dto.BoardUpdateDto;
 import com.enjoytrip.board.model.dto.BoardWritingDto;
 import com.enjoytrip.board.model.service.BoardService;
 import com.enjoytrip.boardLike.model.service.BoardLikeService;
+import com.enjoytrip.response.ResponseMessage;
+import com.enjoytrip.response.StatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +27,20 @@ public class BoardController {
     private final BoardLikeService boardLikeService;
 
     @PostMapping
-    public int writeBoard(@Valid @RequestBody BoardWritingDto boardWritingDto) {
-        return boardService.writeBoard(boardWritingDto);
+    public ResponseEntity<ResponseMessage> writeBoard(@Valid @RequestBody BoardWritingDto boardWritingDto) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        try {
+            int boardId = boardService.writeBoard(boardWritingDto);
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage("게시물이 작성되었습니다.");
+            responseMessage.setData("boardId", boardId);
+
+            return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
+        } catch (IllegalArgumentException ex) {
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage(ex.getMessage());
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{boardId}")

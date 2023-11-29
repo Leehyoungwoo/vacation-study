@@ -9,18 +9,12 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class BoardWritingDto {
 
-    private int boardId;
-
     @NotBlank
     private String title;
 
     @NotBlank
     private String content;
 
-    @NotBlank
-    private String memberId;
-
     @NotNull
-    private Integer tripId;
-
+    private Integer memberId;
 }

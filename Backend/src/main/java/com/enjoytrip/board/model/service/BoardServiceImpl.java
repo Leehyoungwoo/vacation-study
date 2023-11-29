@@ -7,6 +7,7 @@ import com.enjoytrip.board.model.dto.BoardWritingDto;
 import com.enjoytrip.board.model.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -19,12 +20,18 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public int writeBoard(BoardWritingDto boardWritingDto) {
-        if (boardMapper.writeBoard(boardWritingDto) == 0) {
-            throw new RuntimeException();
+        if (StringUtils.isEmpty(boardWritingDto.getTitle())) {
+            throw new IllegalArgumentException("제목을 입력해주세요");
         }
 
-        return boardWritingDto.getBoardId();
+        if (StringUtils.isEmpty(boardWritingDto.getContent())) {
+            throw new IllegalArgumentException("내용을 입력해주세요");
+        }
+        int boardId = boardMapper.writeBoard(boardWritingDto);
+
+        return boardId;
     }
+
 
     @Override
     public BoardReadDto readBoard(int boardId) {
