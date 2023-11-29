@@ -11,15 +11,9 @@ import javax.validation.constraints.NotNull;
 
 public class BoardUpdateDto {
 
-    private int boardId;
-
     @NotBlank
     private String title;
 
     @NotBlank
     private String content;
-
-    @NotNull
-    private Integer tripId;
-
 }

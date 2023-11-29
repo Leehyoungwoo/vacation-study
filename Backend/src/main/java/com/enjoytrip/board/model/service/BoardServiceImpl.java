@@ -50,12 +50,17 @@ public class BoardServiceImpl implements BoardService {
         BoardReadDto boardReadDto = boardMapper.readBoard(boardId);
 
         if (boardReadDto == null) {
-            throw new RuntimeException();
+            throw new NoSuchElementException("게시물을 찾을 수 없습니다.");
         }
-        BoardUpdateDto boardUpdateDto = new BoardUpdateDto(boardId, updatedBoardDto.getTitle(),
-                updatedBoardDto.getContent(), updatedBoardDto.getTripId());
 
-        boardMapper.updateBoard(boardUpdateDto);
+        if (StringUtils.isEmpty(updatedBoardDto.getTitle())) {
+            throw new IllegalArgumentException("제목을 입력해주세요");
+        }
+
+        if (StringUtils.isEmpty(updatedBoardDto.getContent())) {
+            throw new IllegalArgumentException("내용을 입력해주세요");
+        }
+        boardMapper.updateBoard(boardId, updatedBoardDto);
     }
 
     @Override

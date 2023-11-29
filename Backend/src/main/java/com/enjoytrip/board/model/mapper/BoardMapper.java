@@ -5,6 +5,7 @@ import com.enjoytrip.board.model.dto.BoardReadDto;
 import com.enjoytrip.board.model.dto.BoardUpdateDto;
 import com.enjoytrip.board.model.dto.BoardWritingDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface BoardMapper {
 
     BoardReadDto readBoard(int boardId);
 
-    void updateBoard(BoardUpdateDto boardUpdateDto);
+    void updateBoard(@Param("boardId") int boardId, @Param("boardUpdateDto") BoardUpdateDto boardUpdateDto);
 
     void deleteBoard(int boardId);
 

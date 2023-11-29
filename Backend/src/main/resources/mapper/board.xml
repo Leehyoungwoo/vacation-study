@@ -42,11 +42,10 @@
         where b.board_id = #{boardId}
     </select>
 
-    <update id="updateBoard" parameterType="boardUpdateDto">
-        update board
-        set title   = #{title},
-            content = #{content},
-            trip_id = #{tripId}
+    <update id="updateBoard" parameterType="map">
+        update boards
+        set title   = #{boardUpdateDto.title},
+            content = #{boardUpdateDto.content}
         where board_id = #{boardId}
     </update>
 

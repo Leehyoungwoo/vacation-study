@@ -61,9 +61,19 @@ public class BoardController {
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
-    @PutMapping("/edit/{boardId}")
-    public void updateBoard(@PathVariable int boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto) {
-        boardService.updateBoard(boardId, boardUpdateDto);
+    @PutMapping("/{boardId}")
+    public ResponseEntity<ResponseMessage> updateBoard(@PathVariable int boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        try {
+            boardService.updateBoard(boardId, boardUpdateDto);
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage("게시물이 성공적으로 수정되었습니다.");
+        } catch (RuntimeException e) {
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage(e.getMessage());
+        }
+
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}")
