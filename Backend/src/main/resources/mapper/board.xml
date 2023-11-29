@@ -36,10 +36,11 @@
     </insert>
 
     <select id="readBoard" parameterType="int" resultMap="boardReading">
-        select b.title, b.content, b.create_time, m.nickname
+        select b.title, b.content, b.create_time, m.nickname, b.is_deleted as isDeleted
         from boards b
         join members m on b.member_Id = m.member_id
         where b.board_id = #{boardId}
+        and b.is_deleted = false
     </select>
 
     <update id="updateBoard" parameterType="map">
@@ -47,11 +48,12 @@
         set title   = #{boardUpdateDto.title},
             content = #{boardUpdateDto.content}
         where board_id = #{boardId}
+        and b.is_deleted = false
     </update>
 
     <delete id="deleteBoard" parameterType="int">
-        delete
-        from board
+        update boards
+        set is_deleted = true
         where board_id = #{boardId}
     </delete>
 

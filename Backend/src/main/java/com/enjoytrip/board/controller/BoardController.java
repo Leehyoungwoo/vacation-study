@@ -36,13 +36,14 @@ public class BoardController {
             responseMessage.setMessage("게시물이 작성되었습니다.");
             responseMessage.setData("boardId", boardId);
 
-            return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             responseMessage.setStatus(StatusEnum.FAIL);
             responseMessage.setMessage(e.getMessage());
+
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
     }
 
     @GetMapping("/{boardId}")
@@ -56,6 +57,8 @@ public class BoardController {
         } catch (NoSuchElementException e) {
             responseMessage.setStatus(StatusEnum.FAIL);
             responseMessage.setMessage(e.getMessage());
+
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
@@ -67,18 +70,32 @@ public class BoardController {
         try {
             boardService.updateBoard(boardId, boardUpdateDto);
             responseMessage.setStatus(StatusEnum.OK);
-            responseMessage.setMessage("게시물이 성공적으로 수정되었습니다.");
+            responseMessage.setMessage("게시물이 수정되었습니다.");
         } catch (RuntimeException e) {
             responseMessage.setStatus(StatusEnum.FAIL);
             responseMessage.setMessage(e.getMessage());
+
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
+
         }
 
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}")
-    public void deleteBoard(@PathVariable int boardId) {
-        boardService.deleteBoard(boardId);
+    public ResponseEntity<ResponseMessage> deleteBoard(@PathVariable int boardId) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        try {
+            boardService.deleteBoard(boardId);
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage("게시물이 삭제되었습니다.");
+        } catch (NoSuchElementException e) {
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(responseMessage, HttpStatus.NO_CONTENT);
     }
 
     @GetMapping()

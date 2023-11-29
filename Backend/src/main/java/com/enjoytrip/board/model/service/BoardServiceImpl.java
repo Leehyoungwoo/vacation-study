@@ -53,6 +53,10 @@ public class BoardServiceImpl implements BoardService {
             throw new NoSuchElementException("게시물을 찾을 수 없습니다.");
         }
 
+        if (boardReadDto.isDeleted()) {
+            throw new IllegalStateException("삭제된 게시물은 수정할 수 없습니다.");
+        }
+
         if (StringUtils.isEmpty(updatedBoardDto.getTitle())) {
             throw new IllegalArgumentException("제목을 입력해주세요");
         }
@@ -60,6 +64,7 @@ public class BoardServiceImpl implements BoardService {
         if (StringUtils.isEmpty(updatedBoardDto.getContent())) {
             throw new IllegalArgumentException("내용을 입력해주세요");
         }
+
         boardMapper.updateBoard(boardId, updatedBoardDto);
     }
 
@@ -68,9 +73,10 @@ public class BoardServiceImpl implements BoardService {
         BoardReadDto boardReadDto = boardMapper.readBoard(boardId);
 
         if (boardReadDto == null) {
-            throw new RuntimeException();
+            throw new NoSuchElementException("게시물을 찾을 수 없습니다.");
         }
-        boardMapper.deleteAllCommentInBoard(boardId);
+
+//        boardMapper.deleteAllCommentInBoard(boardId);
         boardMapper.deleteBoard(boardId);
     }
 

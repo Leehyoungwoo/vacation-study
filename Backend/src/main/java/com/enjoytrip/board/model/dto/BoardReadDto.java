@@ -17,4 +17,9 @@ public class BoardReadDto {
 
     private String nickname;
 
+    private boolean isDeleted;
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
 }
