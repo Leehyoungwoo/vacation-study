@@ -14,8 +14,7 @@
         <result column="title" property="title"></result>
         <result column="content" property="content"></result>
         <result column="create_time" property="createTime"></result>
-        <result column="member_id" property="memberId"></result>
-        <result column="trip_id" property="tripId"></result>
+        <result column="nickname" property="nickname"></result>
     </resultMap>
     
     <resultMap id="boardList" type="boardListDto">
@@ -37,9 +36,10 @@
     </insert>
 
     <select id="readBoard" parameterType="int" resultMap="boardReading">
-        select title, content, create_time, member_id, trip_id
-        from board
-        where board_id = #{boardId}
+        select b.title, b.content, b.create_time, m.nickname
+        from boards b
+        join members m on b.member_Id = m.member_id
+        where b.board_id = #{boardId}
     </select>
 
     <update id="updateBoard" parameterType="boardUpdateDto">

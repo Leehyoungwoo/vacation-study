@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/board")
@@ -36,16 +37,28 @@ public class BoardController {
             responseMessage.setData("boardId", boardId);
 
             return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException e) {
             responseMessage.setStatus(StatusEnum.FAIL);
-            responseMessage.setMessage(ex.getMessage());
-            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
+            responseMessage.setMessage(e.getMessage());
         }
+
+        return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/{boardId}")
-    public BoardReadDto readBoard(@PathVariable int boardId) {
-        return boardService.readBoard(boardId);
+    public ResponseEntity<ResponseMessage> readBoard(@PathVariable int boardId) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        try {
+            BoardReadDto boardReadDto = boardService.readBoard(boardId);
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage(null);
+            responseMessage.setData("boardReadDto", boardReadDto);
+        } catch (NoSuchElementException e) {
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage(e.getMessage());
+        }
+
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @PutMapping("/edit/{boardId}")
@@ -92,7 +105,7 @@ public class BoardController {
             return new ResponseEntity<>("게시물이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
         }
 
-        String authorId = boardService.readBoard(boardId).getMemberId();
+        String authorId = boardService.readBoard(boardId).getNickname();
         if (authorId.equals(memberId)) {
             return new ResponseEntity<>("추천할 수 없습니다.", HttpStatus.BAD_REQUEST);
         }

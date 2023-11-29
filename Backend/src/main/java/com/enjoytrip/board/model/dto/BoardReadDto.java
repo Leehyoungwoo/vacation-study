@@ -15,7 +15,6 @@ public class BoardReadDto {
 
     private LocalDateTime createTime;
 
-    private String memberId;
+    private String nickname;
 
-    private String tripId;
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -38,7 +39,7 @@ public class BoardServiceImpl implements BoardService {
         BoardReadDto boardReadDto = boardMapper.readBoard(boardId);
 
         if (boardReadDto == null) {
-            throw new RuntimeException();
+            throw new NoSuchElementException("게시물을 찾을 수 없습니다.");
         }
 
         return boardReadDto;
