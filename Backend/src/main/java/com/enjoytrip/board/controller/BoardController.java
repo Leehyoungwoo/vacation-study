@@ -135,28 +135,37 @@ public class BoardController {
     }
 
     @PutMapping("/{boardId}/like")
-    public ResponseEntity<String> likeBoard(@PathVariable int boardId, @RequestParam String memberId) {
-
-        if (!boardService.existsBoard(boardId)) {
-            return new ResponseEntity<>("게시물이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
+    public ResponseEntity<ResponseMessage> likeBoard(@PathVariable int boardId, @RequestBody int memberId) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        try {
+            if (boardLikeService.hasUserLikedBoard(boardId, memberId)) {
+                boardLikeService.unlikeBoard(boardId, memberId);
+                responseMessage.setStatus(StatusEnum.OK);
+                responseMessage.setMessage("좋아요가 취소되었습니다.");
+            } else {
+                boardLikeService.likeBoard(boardId, memberId);
+                responseMessage.setStatus(StatusEnum.OK);
+                responseMessage.setMessage("게시물을 좋아요했습니다.");
+            }
+        } catch (NoSuchElementException e) {
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
         }
-
-        String authorId = boardService.readBoard(boardId).getNickname();
-        if (authorId.equals(memberId)) {
-            return new ResponseEntity<>("추천할 수 없습니다.", HttpStatus.BAD_REQUEST);
-        }
-
-        if (boardLikeService.hasUserLikedBoard(memberId, boardId)) {
-            boardLikeService.unlikeBoard(boardId, memberId);
-            return new ResponseEntity<>("추천을 취소하였습니다.", HttpStatus.OK);
-        } else {
-            boardLikeService.likeBoard(boardId, memberId);
-            return new ResponseEntity<>("추천하였습니다.", HttpStatus.OK);
-        }
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @GetMapping("{boardId}/likes")
-    public int getLikesCount(@PathVariable int boardId) {
-        return boardLikeService.getLikesCount(boardId);
+    public ResponseEntity<ResponseMessage> getLikesCount(@PathVariable int boardId) {
+        ResponseMessage responseMessage = new ResponseMessage();
+
+        try {
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage("정상적으로 처리되었습니다.");
+            responseMessage.setData("likesCount", boardLikeService.getLikesCount(boardId));
+        } catch (RuntimeException e) {
+            responseMessage.setMessage("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        }
+
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 }
