@@ -17,7 +17,7 @@ public class CommentWriteDto {
     @NotBlank
     private String content;
 
-    private String create_time;
+    private String createTime;
 
     @NotBlank
     private String memberId;
