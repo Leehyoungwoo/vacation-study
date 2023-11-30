@@ -76,7 +76,6 @@ public class BoardController {
             responseMessage.setMessage(e.getMessage());
 
             return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
-
         }
 
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
@@ -99,31 +98,37 @@ public class BoardController {
     }
 
     @GetMapping()
-    public List<BoardListDto> getBoardList(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
-                                           @RequestParam(name = "pageSize", defaultValue = "8") int pageSize) {
-        return boardService.getBoardList(pageNo, pageSize);
-    }
+    public ResponseEntity<ResponseMessage> getBoardList(@RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
+                                                        @RequestParam(name = "pageSize", defaultValue = "8") int pageSize) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        try {
+            List<BoardListDto> boardList = boardService.getBoardList(pageNo, pageSize);
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage("게시물 목록을 불러왔습니다.");
+            responseMessage.setData("boardList", boardList);
+        } catch (RuntimeException e) {
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
+        }
 
-    @GetMapping("/count")
-    public int countBoard() {
-        return boardService.countBoard();
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
-
 
     @GetMapping("/search")
-    public ResponseEntity<Map<String, Object>> searchBoard(@RequestParam String searchType, @RequestParam String keyword,
-                                                           @RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
-                                                           @RequestParam(name = "pageSize", defaultValue = "8") int pageSize) {
-        List<BoardListDto> content = boardService.searchBoard(searchType, keyword, pageNo, pageSize);
-        int totalElements = boardService.countSearchResults(searchType, keyword);
+    public ResponseEntity<ResponseMessage> searchBoard(@RequestParam String searchType, @RequestParam String keyword,
+                                                       @RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
+                                                       @RequestParam(name = "pageSize", defaultValue = "8") int pageSize) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        List<BoardListDto> searchItems = boardService.searchBoard(searchType, keyword, pageNo, pageSize);
+        int searchCount = boardService.countSearchResults(searchType, keyword);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("content", content);
-        response.put("totalElements", totalElements);
+        response.put("searchItems", searchItems);
+        response.put("searchCount", searchCount);
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
-
 
     @PutMapping("/{boardId}/like")
     public ResponseEntity<String> likeBoard(@PathVariable int boardId, @RequestParam String memberId) {

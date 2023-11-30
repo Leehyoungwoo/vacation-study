@@ -49,7 +49,7 @@ public class BoardServiceImpl implements BoardService {
     public void updateBoard(int boardId, BoardUpdateDto updatedBoardDto) {
         BoardReadDto boardReadDto = boardMapper.readBoard(boardId);
 
-        if (boardReadDto == null) {
+        if (!existsBoard(boardId)) {
             throw new NoSuchElementException("게시물을 찾을 수 없습니다.");
         }
 
@@ -70,18 +70,26 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void deleteBoard(int boardId) {
-        BoardReadDto boardReadDto = boardMapper.readBoard(boardId);
-
-        if (boardReadDto == null) {
+        if (!existsBoard(boardId)) {
             throw new NoSuchElementException("게시물을 찾을 수 없습니다.");
         }
-
 //        boardMapper.deleteAllCommentInBoard(boardId);
         boardMapper.deleteBoard(boardId);
     }
 
     @Override
     public List<BoardListDto> getBoardList(int pageNo, int pageSize) {
+        int totalCount = boardMapper.countBoard();
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
+        if (pageNo <= 0 || pageSize <= 0) {
+            throw new IllegalArgumentException("유효하지 않은 페이지 번호 또는 페이지 크기입니다.");
+        }
+
+        if (pageNo > totalPages) {
+            throw new NoSuchElementException("요청한 페이지가 존재하지 않습니다.");
+        }
+
         int offset = (pageNo - 1) * pageSize;
         return boardMapper.getBoardList(pageSize, offset);
     }
