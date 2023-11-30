@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
@@ -12,14 +13,10 @@ public class CommentReadDto {
 
     private int commentId;
 
-    @NotNull
-    private int boardId;
-
-    @NotBlank
     private String content;
 
-    private String create_time;
+    private LocalDateTime create_time;
 
-    @NotBlank
-    private String memberId;
+    private String nickname;
+
 }

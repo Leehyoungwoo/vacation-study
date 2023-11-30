@@ -20,17 +20,12 @@
         values (#{boardId}, #{content}, #{memberId})
     </insert>
 
-    <select id="getCommentById" parameterType="int" resultType="commentDto">
-        select comment_id, board_id, content, create_time, member_id
-        from comments
-        where comment_id = #{commentId}
-        order by comment_id desc
-    </select>
-
-    <select id="getCommentList" parameterType="int" resultType="commentDto">
-        select *
-        from comments
-        where board_id = #{boardId}
+    <select id="getCommentList" parameterType="int" resultType="CommentReadDto">
+        select c.comment_id, c.content, c.create_time, m.nickname
+        from comments c
+                 inner join members m on c.member_id = m.member_id
+        where c.board_id = #{boardId}
+        and c.is_deleted = false
     </select>
 
     <update id="updateComment" parameterType="commentUpdateDto">
@@ -44,4 +39,11 @@
         from comments
         where comment_id = #{commentId}
     </delete>
+
+    <select id="getCommentById" parameterType="int" resultType="commentDto">
+        select comment_id, board_id, content, create_time, member_id
+        from comments
+        where comment_id = #{commentId}
+        order by comment_id
+    </select>
 </mapper>

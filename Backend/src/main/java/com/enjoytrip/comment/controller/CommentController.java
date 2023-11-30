@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.enjoytrip.response.StatusEnum;
 
 import javax.validation.Valid;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/board/{boardId}/comments")
@@ -42,14 +43,15 @@ public class CommentController {
     @GetMapping()
     public ResponseEntity<ResponseMessage> getCommentList(@PathVariable int boardId) {
         ResponseMessage message = new ResponseMessage();
-        if (boardService.readBoard(boardId) == null) {
-            message.setStatus(StatusEnum.FAIL);
-            message.setMessage("댓글이 존재하지 않습니다.");
-        } else {
-            message.setData("commentList", commentService.getListByBoardId(boardId));
+        try {
             message.setStatus(StatusEnum.OK);
             message.setMessage("댓글을 불러왔습니다.");
+            message.setData("commentList", commentService.getListByBoardId(boardId));
+        } catch (NoSuchElementException e) {
+            message.setStatus(StatusEnum.FAIL);
+            message.setMessage(e.getMessage());
         }
+
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 

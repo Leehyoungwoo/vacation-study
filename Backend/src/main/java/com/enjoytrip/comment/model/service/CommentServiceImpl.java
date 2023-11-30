@@ -1,6 +1,8 @@
 package com.enjoytrip.comment.model.service;
 
+import com.enjoytrip.board.model.service.BoardService;
 import com.enjoytrip.comment.model.dto.CommentDto;
+import com.enjoytrip.comment.model.dto.CommentReadDto;
 import com.enjoytrip.comment.model.dto.CommentUpdateDto;
 import com.enjoytrip.comment.model.mapper.CommentMapper;
 import lombok.RequiredArgsConstructor;
@@ -8,12 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
     private final CommentMapper commentMapper;
+    private final BoardService boardService;
 
     @Override
     public void writeComment(CommentDto writeCommentDto) {
@@ -22,6 +26,14 @@ public class CommentServiceImpl implements CommentService {
         }
 
         commentMapper.writeComment(writeCommentDto);
+    }
+
+    @Override
+    public List<CommentReadDto> getListByBoardId(int boardId) {
+        if (!boardService.existsBoard(boardId)) {
+            throw new NoSuchElementException("게시물이 존재하지 않습니다.");
+        }
+        return commentMapper.getCommentList(boardId);
     }
 
     @Override
@@ -38,10 +50,5 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto getCommentDto(int commentId) {
         CommentDto commentDto = commentMapper.getCommentById(commentId);
         return commentDto;
-    }
-
-    @Override
-    public List<CommentDto> getListByBoardId(int boardId) {
-        return commentMapper.getCommentList(boardId);
     }
 }
