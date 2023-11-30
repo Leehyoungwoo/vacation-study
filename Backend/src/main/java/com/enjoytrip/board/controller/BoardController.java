@@ -91,6 +91,7 @@ public class BoardController {
         } catch (NoSuchElementException e) {
             responseMessage.setStatus(StatusEnum.FAIL);
             responseMessage.setMessage(e.getMessage());
+
             return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
 
@@ -109,6 +110,7 @@ public class BoardController {
         } catch (RuntimeException e) {
             responseMessage.setStatus(StatusEnum.FAIL);
             responseMessage.setMessage(e.getMessage());
+
             return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
 
@@ -128,6 +130,7 @@ public class BoardController {
         } catch (RuntimeException e) {
             responseMessage.setStatus(StatusEnum.FAIL);
             responseMessage.setMessage(e.getMessage());
+
             return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
 
@@ -150,7 +153,10 @@ public class BoardController {
         } catch (NoSuchElementException e) {
             responseMessage.setStatus(StatusEnum.FAIL);
             responseMessage.setMessage("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
+
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
@@ -164,6 +170,8 @@ public class BoardController {
             responseMessage.setData("likesCount", boardLikeService.getLikesCount(boardId));
         } catch (RuntimeException e) {
             responseMessage.setMessage("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);

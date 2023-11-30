@@ -27,49 +27,54 @@ public class CommentController {
 
     @PostMapping()
     public ResponseEntity<ResponseMessage> writeComment(@Valid @RequestBody CommentDto writeCommentDto) {
-        ResponseMessage message = new ResponseMessage();
+        ResponseMessage responseMessage = new ResponseMessage();
         try {
             commentService.writeComment(writeCommentDto);
-            message.setStatus(StatusEnum.OK);
-            message.setMessage("댓글이 작성되었습니다.");
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage("댓글이 작성되었습니다.");
         } catch (IllegalArgumentException e) {
-            message.setStatus(StatusEnum.FAIL);
-            message.setMessage(e.getMessage());
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage(e.getMessage());
+
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
+
         }
 
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
     }
 
     @GetMapping()
     public ResponseEntity<ResponseMessage> getCommentList(@PathVariable int boardId) {
-        ResponseMessage message = new ResponseMessage();
+        ResponseMessage responseMessage = new ResponseMessage();
         try {
-            message.setStatus(StatusEnum.OK);
-            message.setMessage("댓글을 불러왔습니다.");
-            message.setData("commentList", commentService.getListByBoardId(boardId));
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage("댓글을 불러왔습니다.");
+            responseMessage.setData("commentList", commentService.getListByBoardId(boardId));
         } catch (NoSuchElementException e) {
-            message.setStatus(StatusEnum.FAIL);
-            message.setMessage(e.getMessage());
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage(e.getMessage());
+
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     // 댓글 수정 기능 프로젝트에서 제외했음
     @PutMapping()
     public ResponseEntity<ResponseMessage> updateComment(@RequestBody CommentUpdateDto updateCommentDto) {
-        ResponseMessage message = new ResponseMessage();
+        ResponseMessage responseMessage = new ResponseMessage();
         CommentDto commentDto = commentService.getCommentDto(updateCommentDto.getCommentId());
         if (commentDto == null) {
-            message.setStatus(StatusEnum.FAIL);
-            message.setMessage("댓글이 존재하지 않습니다.");
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage("댓글이 존재하지 않습니다.");
         } else {
-            message.setStatus(StatusEnum.OK);
-            message.setMessage("댓글이 수정되었습니다.");
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage("댓글이 수정되었습니다.");
             commentService.updateComment(updateCommentDto);
         }
 
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @DeleteMapping("{commentId}")
@@ -82,6 +87,8 @@ public class CommentController {
         } catch (NoSuchElementException e) {
             responseMessage.setStatus(StatusEnum.FAIL);
             responseMessage.setMessage(e.getMessage());
+
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(responseMessage, HttpStatus.ACCEPTED);
@@ -103,6 +110,8 @@ public class CommentController {
         } catch (RuntimeException e) {
             responseMessage.setStatus(StatusEnum.FAIL);
             responseMessage.setMessage(e.getMessage());
+
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
@@ -118,6 +127,8 @@ public class CommentController {
         } catch (NoSuchElementException e) {
             responseMessage.setStatus(StatusEnum.FAIL);
             responseMessage.setMessage(e.getMessage());
+
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
