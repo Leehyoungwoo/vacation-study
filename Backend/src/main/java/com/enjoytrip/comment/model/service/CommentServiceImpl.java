@@ -5,6 +5,7 @@ import com.enjoytrip.comment.model.dto.CommentUpdateDto;
 import com.enjoytrip.comment.model.mapper.CommentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -16,8 +17,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void writeComment(CommentDto writeCommentDto) {
-        if (writeCommentDto == null) {
-            throw new RuntimeException();
+        if (StringUtils.isEmpty(writeCommentDto.getContent())) {
+            throw new IllegalArgumentException("댓글을 입력하세요.");
         }
 
         commentMapper.writeComment(writeCommentDto);

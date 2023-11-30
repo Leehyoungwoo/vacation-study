@@ -27,15 +27,15 @@ public class CommentController {
     @PostMapping()
     public ResponseEntity<ResponseMessage> writeComment(@Valid @RequestBody CommentDto writeCommentDto) {
         ResponseMessage message = new ResponseMessage();
-        if (writeCommentDto.getContent() == null || writeCommentDto.getContent().trim().isEmpty()) {
-            message.setStatus(StatusEnum.FAIL);
-            message.setMessage("내용을 입력해주세요.");
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-        } else {
+        try {
             commentService.writeComment(writeCommentDto);
             message.setStatus(StatusEnum.OK);
             message.setMessage("댓글이 작성되었습니다.");
+        }catch (IllegalArgumentException e){
+            message.setStatus(StatusEnum.FAIL);
+            message.setMessage(e.getMessage());
         }
+
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 

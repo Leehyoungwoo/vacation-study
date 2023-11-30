@@ -16,32 +16,32 @@
     </resultMap>
 
     <insert id="writeComment" parameterType="commentDto">
-        insert into comment (board_id, content, member_id)
+        insert into comments (board_id, content, member_id)
         values (#{boardId}, #{content}, #{memberId})
     </insert>
 
     <select id="getCommentById" parameterType="int" resultType="commentDto">
         select comment_id, board_id, content, create_time, member_id
-        from comment
+        from comments
         where comment_id = #{commentId}
         order by comment_id desc
     </select>
 
     <select id="getCommentList" parameterType="int" resultType="commentDto">
         select *
-        from comment
+        from comments
         where board_id = #{boardId}
     </select>
 
     <update id="updateComment" parameterType="commentUpdateDto">
-        update comment
+        update comments
         set content = #{content}
         where comment_id = #{commentId};
     </update>
 
     <delete id="deleteComment" parameterType="int">
         delete
-        from comment
+        from comments
         where comment_id = #{commentId}
     </delete>
 </mapper>
