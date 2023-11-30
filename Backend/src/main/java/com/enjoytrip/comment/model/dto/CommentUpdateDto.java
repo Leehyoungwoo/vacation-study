@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class CommentUpdateDto {
     @NotNull
-    private int commentId;
+    private Integer commentId;
     @NotBlank
     private String content;
     @NotBlank

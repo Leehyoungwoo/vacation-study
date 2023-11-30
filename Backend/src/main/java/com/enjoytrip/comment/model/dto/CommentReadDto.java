@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 public class CommentReadDto {
 
-    private int commentId;
+    private Integer commentId;
 
     private String content;
 

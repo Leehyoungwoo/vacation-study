@@ -9,10 +9,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 public class CommentWriteDto {
-    private int commentId;
+    private Integer commentId;
 
     @NotNull
-    private int boardId;
+    private Integer boardId;
 
     @NotBlank
     private String content;

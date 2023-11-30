@@ -14,5 +14,5 @@ public class CommentLikeDto {
     private Integer commentId;
 
     @NotBlank
-    private String memberId;
+    private Integer memberId;
 }

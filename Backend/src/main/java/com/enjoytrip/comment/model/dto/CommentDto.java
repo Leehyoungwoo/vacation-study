@@ -10,10 +10,10 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class CommentDto {
 
-    private int commentId;
+    private Integer commentId;
 
     @NotNull
-    private int boardId;
+    private Integer boardId;
 
     @NotBlank
     private String content;
@@ -21,5 +21,5 @@ public class CommentDto {
     private String create_time;
 
     @NotBlank
-    private String memberId;
+    private Integer memberId;
 }

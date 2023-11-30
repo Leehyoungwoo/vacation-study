@@ -32,7 +32,7 @@ public class CommentController {
             commentService.writeComment(writeCommentDto);
             message.setStatus(StatusEnum.OK);
             message.setMessage("댓글이 작성되었습니다.");
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             message.setStatus(StatusEnum.FAIL);
             message.setMessage(e.getMessage());
         }
@@ -79,7 +79,7 @@ public class CommentController {
             commentService.deleteComment(commentId);
             responseMessage.setStatus(StatusEnum.OK);
             responseMessage.setMessage("댓글이 삭제되었습니다");
-        }catch (NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             responseMessage.setStatus(StatusEnum.FAIL);
             responseMessage.setMessage(e.getMessage());
         }
@@ -89,36 +89,37 @@ public class CommentController {
 
     @PutMapping("/like")
     public ResponseEntity<ResponseMessage> likeComment(@RequestBody CommentLikeDto commentLikeDto) {
-        ResponseMessage message = new ResponseMessage();
-        if (commentLikeDto.getCommentId() == null) {
-            message.setStatus(StatusEnum.FAIL);
-            message.setMessage("댓글이 존재하지 않습니다.");
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-        }
-        //본인이 쓴 댓글 추천 불가능
-        String authorId = commentService.getCommentDto(commentLikeDto.getCommentId())
-                .getMemberId();
-        if (authorId.equals(commentLikeDto.getMemberId())) {
-            message.setStatus(StatusEnum.FAIL);
-            message.setMessage("추천할 수 없습니다.");
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-        }
-
-        if (commentLikeService.hasUserLikeComment(commentLikeDto)) {
-            commentLikeService.unlikeComment(commentLikeDto);
-            message.setMessage("추천이 취소되었습니다.");
-            message.setStatus(StatusEnum.OK);
-        } else {
-            commentLikeService.likeComment(commentLikeDto);
-            message.setMessage("추천하였습니다.");
-            message.setStatus(StatusEnum.OK);
+        ResponseMessage responseMessage = new ResponseMessage();
+        try {
+            if (commentLikeService.hasUserLikeComment(commentLikeDto)) {
+                commentLikeService.unlikeComment(commentLikeDto);
+                responseMessage.setMessage("추천이 취소되었습니다.");
+                responseMessage.setStatus(StatusEnum.OK);
+            } else {
+                commentLikeService.likeComment(commentLikeDto);
+                responseMessage.setMessage("추천하였습니다.");
+                responseMessage.setStatus(StatusEnum.OK);
+            }
+        } catch (RuntimeException e) {
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage(e.getMessage());
         }
 
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @GetMapping("{commentId}/likes")
-    public int getLikesCount(@PathVariable int commentId) {
-        return commentLikeService.getLikesCount(commentId);
+    public ResponseEntity<ResponseMessage> getLikesCount(@PathVariable int commentId) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        try {
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage("좋아요 개수를 성공적으로 불러왔습니다.");
+            responseMessage.setData("commentLikesCount", commentLikeService.getLikesCount(commentId));
+        } catch (NoSuchElementException e) {
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage(e.getMessage());
+        }
+
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 }
