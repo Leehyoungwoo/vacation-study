@@ -35,8 +35,8 @@
     </update>
 
     <delete id="deleteComment" parameterType="int">
-        delete
-        from comments
+        update comments
+        set is_deleted = true
         where comment_id = #{commentId}
     </delete>
 

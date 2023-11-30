@@ -43,6 +43,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteComment(int commentId) {
+        if (commentMapper.getCommentById(commentId) == null) {
+            throw new NoSuchElementException("댓글이 존재하지 않습니다.");
+        }
+
         commentMapper.deleteComment(commentId);
     }
 

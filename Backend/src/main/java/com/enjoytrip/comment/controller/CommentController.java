@@ -55,6 +55,7 @@ public class CommentController {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
+    // 댓글 수정 기능 프로젝트에서 제외했음
     @PutMapping()
     public ResponseEntity<ResponseMessage> updateComment(@RequestBody CommentUpdateDto updateCommentDto) {
         ResponseMessage message = new ResponseMessage();
@@ -73,17 +74,17 @@ public class CommentController {
 
     @DeleteMapping("{commentId}")
     public ResponseEntity<ResponseMessage> deleteComment(@PathVariable int commentId) {
-        ResponseMessage message = new ResponseMessage();
-        CommentDto commentDto = commentService.getCommentDto(commentId);
-        if (commentDto == null) {
-            message.setStatus(StatusEnum.FAIL);
-            message.setMessage("댓글이 존재하지 않습니다.");
-        } else {
+        ResponseMessage responseMessage = new ResponseMessage();
+        try {
             commentService.deleteComment(commentId);
-            message.setStatus(StatusEnum.OK);
-            message.setMessage("댓글이 삭제되었습니다.");
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage("댓글이 삭제되었습니다");
+        }catch (NoSuchElementException e) {
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage(e.getMessage());
         }
-        return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+
+        return new ResponseEntity<>(responseMessage, HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/like")
