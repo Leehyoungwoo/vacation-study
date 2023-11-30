@@ -120,12 +120,16 @@ public class BoardController {
                                                        @RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
                                                        @RequestParam(name = "pageSize", defaultValue = "8") int pageSize) {
         ResponseMessage responseMessage = new ResponseMessage();
-        List<BoardListDto> searchItems = boardService.searchBoard(searchType, keyword, pageNo, pageSize);
-        int searchCount = boardService.countSearchResults(searchType, keyword);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("searchItems", searchItems);
-        response.put("searchCount", searchCount);
+        try {
+            List<BoardListDto> searchList = boardService.searchBoard(searchType, keyword, pageNo, pageSize);
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage("검색이 성공적으로 수행되었습니다");
+            responseMessage.setData("searchList", searchList);
+        } catch (RuntimeException e) {
+            responseMessage.setStatus(StatusEnum.FAIL);
+            responseMessage.setMessage(e.getMessage());
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }

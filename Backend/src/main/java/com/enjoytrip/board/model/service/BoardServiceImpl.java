@@ -96,6 +96,25 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardListDto> searchBoard(String searchType, String keyword, int pageNo, int pageSize) {
+        int searchCount = boardMapper.countSearchResults(searchType, keyword);
+        int searchPages = (int) Math.ceil((double) searchCount / pageSize);
+
+        if (StringUtils.isEmpty(searchType)) {
+            throw new IllegalArgumentException("검색 구분을 선택하세요.");
+        }
+
+        if (StringUtils.isEmpty(keyword)) {
+            throw new IllegalArgumentException("검색어를 입력하세요.");
+        }
+
+        if (pageNo <= 0 || pageSize <= 0) {
+            throw new IllegalArgumentException("유효하지 않은 페이지 번호 또는 페이지 크기입니다.");
+        }
+
+        if (pageNo > searchPages) {
+            throw new NoSuchElementException("요청한 페이지가 존재하지 않습니다.");
+        }
+
         int offset = (pageNo - 1) * pageSize;
         return boardMapper.searchBoard(searchType, keyword, pageSize, offset);
     }

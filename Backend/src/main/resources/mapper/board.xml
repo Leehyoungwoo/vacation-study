@@ -62,30 +62,33 @@
         from comments
         where board_id = #{boardId}
     </delete>
-    
+
     <select id="getBoardList" resultMap="boardList">
-        select board_id, title, member_id, create_time
-        from boards
-        where is_deleted = false
-        order by board_id desc
-        limit #{pageSize} offset #{offset};
+        select b.board_id, b.title, m.nickname, b.create_time
+        from boards b
+                 inner join members m on b.member_id = m.member_id
+        where b.is_deleted = false
+        order by b.board_id desc
+            limit #{pageSize} offset #{offset};
     </select>
-    
+
     <select id="searchBoard" resultMap="boardList">
-        select board_id, title, member_id, create_time
-        from board
+        select b.board_id, b.title, m.nickname, b.create_time
+        from boards b
+        inner join members m on b.member_id = m.member_id
         <where>
             <if test="searchType == 'title'">
-                and title like concat('%', #{keyword}, '%')
+                and b.title like concat('%', #{keyword}, '%')
             </if>
-            <if test="searchType == 'memberId'">
-                and member_id like concat('%', #{keyword}, '%')
+            <if test="searchType == 'nickname'">
+                and m.nickname like concat('%', #{keyword}, '%')
             </if>
             <if test="searchType == 'content'">
-                and content like concat('%', #{keyword}, '%')
+                and b.content like concat('%', #{keyword}, '%')
             </if>
+            and b.is_deleted = false
         </where>
-        order by board_id desc
+        order by b.board_id desc
         limit #{pageSize} offset #{offset};
     </select>
 

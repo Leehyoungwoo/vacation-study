@@ -9,6 +9,6 @@ public class BoardListDto {
 
     private int boardId;
     private String title;
-    private String memberId;
+    private String nickname;
     private String createTime;
 }
