@@ -7,6 +7,7 @@ import com.enjoytrip.board.model.dto.BoardWritingDto;
 import com.enjoytrip.board.model.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -15,11 +16,13 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BoardServiceImpl implements BoardService {
 
     private final BoardMapper boardMapper;
 
     @Override
+    @Transactional
     public int writeBoard(BoardWritingDto boardWritingDto) {
         if (StringUtils.isEmpty(boardWritingDto.getTitle())) {
             throw new IllegalArgumentException("제목을 입력해주세요");
@@ -33,8 +36,8 @@ public class BoardServiceImpl implements BoardService {
         return boardId;
     }
 
-
     @Override
+    @Transactional
     public BoardReadDto readBoard(int boardId) {
         BoardReadDto boardReadDto = boardMapper.readBoard(boardId);
 
@@ -46,6 +49,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public void updateBoard(int boardId, BoardUpdateDto updatedBoardDto) {
         BoardReadDto boardReadDto = boardMapper.readBoard(boardId);
 
@@ -69,6 +73,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public void deleteBoard(int boardId) {
         if (!existsBoard(boardId)) {
             throw new NoSuchElementException("게시물을 찾을 수 없습니다.");
@@ -78,6 +83,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public List<BoardListDto> getBoardList(int pageNo, int pageSize) {
         int totalCount = boardMapper.countBoard();
         int totalPages = (int) Math.ceil((double) totalCount / pageSize);
@@ -95,6 +101,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public List<BoardListDto> searchBoard(String searchType, String keyword, int pageNo, int pageSize) {
         int searchCount = boardMapper.countSearchResults(searchType, keyword);
         int searchPages = (int) Math.ceil((double) searchCount / pageSize);
@@ -120,16 +127,19 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public boolean existsBoard(int boardId) {
         return boardMapper.readBoard(boardId) != null;
     }
 
     @Override
+    @Transactional
     public int countBoard() {
         return boardMapper.countBoard();
     }
 
     @Override
+    @Transactional
     public int countSearchResults(String searchType, String keyword) {
         return boardMapper.countSearchResults(searchType, keyword);
     }

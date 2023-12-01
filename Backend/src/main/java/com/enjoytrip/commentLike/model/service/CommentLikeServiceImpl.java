@@ -6,22 +6,26 @@ import com.enjoytrip.commentLike.model.dto.CommentLikeDto;
 import com.enjoytrip.commentLike.model.mapper.CommentLikeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentLikeServiceImpl implements CommentLikeService {
 
     private final CommentLikeMapper commentLikeMapper;
     private final CommentService commentService;
 
     @Override
+    @Transactional
     public boolean hasUserLikeComment(CommentLikeDto commentLikeDto) {
         return commentLikeMapper.hasUserLikeComment(commentLikeDto) > 0;
     }
 
     @Override
+    @Transactional
     public void likeComment(CommentLikeDto commentLikeDto) {
         CommentDto commentDto = commentService.getCommentDto(commentLikeDto.getCommentId());
         if (commentDto == null) {
@@ -35,6 +39,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
     }
 
     @Override
+    @Transactional
     public void unlikeComment(CommentLikeDto commentLikeDto) {
         CommentDto commentDto = commentService.getCommentDto(commentLikeDto.getCommentId());
         if (commentDto == null) {
@@ -49,6 +54,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
     }
 
     @Override
+    @Transactional
     public int getLikesCount(int commentId) {
         CommentDto commentDto = commentService.getCommentDto(commentId);
         if (commentDto == null) {
