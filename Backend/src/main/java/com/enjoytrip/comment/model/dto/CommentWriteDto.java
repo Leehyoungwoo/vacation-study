@@ -12,13 +12,13 @@ public class CommentWriteDto {
     private Integer commentId;
 
     @NotNull
-    private Integer boardId;
+    private final Integer boardId;
 
     @NotBlank
-    private String content;
+    private final String content;
 
-    private String createTime;
+    private final String createTime;
 
     @NotBlank
-    private String memberId;
+    private final String memberId;
 }

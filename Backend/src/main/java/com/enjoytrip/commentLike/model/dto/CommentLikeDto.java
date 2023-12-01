@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 public class CommentLikeDto {
 
     @NotNull
-    private Integer commentId;
+    private final Integer commentId;
 
     @NotBlank
-    private Integer memberId;
+    private final Integer memberId;
 }

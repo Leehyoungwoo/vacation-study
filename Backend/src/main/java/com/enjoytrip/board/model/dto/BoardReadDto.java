@@ -9,15 +9,15 @@ import java.time.LocalDateTime;
 @Getter
 public class BoardReadDto {
 
-    private String title;
+    private final String title;
 
-    private String content;
+    private final String content;
 
-    private LocalDateTime createTime;
+    private final LocalDateTime createTime;
 
-    private String nickname;
+    private final String nickname;
 
-    private boolean isDeleted;
+    private final boolean isDeleted;
 
     public boolean isDeleted() {
         return isDeleted;

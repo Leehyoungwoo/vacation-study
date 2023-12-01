@@ -10,11 +10,11 @@ import javax.validation.constraints.NotNull;
 public class BoardWritingDto {
 
     @NotBlank
-    private String title;
+    private final String title;
 
     @NotBlank
-    private String content;
+    private final String content;
 
     @NotNull
-    private Integer memberId;
+    private final Integer memberId;
 }

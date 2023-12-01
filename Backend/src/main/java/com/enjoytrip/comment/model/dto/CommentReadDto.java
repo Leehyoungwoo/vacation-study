@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @Getter
 public class CommentReadDto {
 
-    private Integer commentId;
+    private final Integer commentId;
 
-    private String content;
+    private final String content;
 
-    private LocalDateTime create_time;
+    private final LocalDateTime create_time;
 
-    private String nickname;
+    private final String nickname;
 
 }

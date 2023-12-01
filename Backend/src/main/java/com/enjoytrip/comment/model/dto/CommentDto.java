@@ -10,16 +10,16 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class CommentDto {
 
-    private Integer commentId;
+    private final Integer commentId;
 
     @NotNull
-    private Integer boardId;
+    private final Integer boardId;
 
     @NotBlank
-    private String content;
+    private final String content;
 
-    private String create_time;
+    private final String create_time;
 
     @NotBlank
-    private Integer memberId;
+    private final Integer memberId;
 }

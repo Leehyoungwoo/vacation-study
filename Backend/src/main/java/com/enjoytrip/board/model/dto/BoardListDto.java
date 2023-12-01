@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 public class BoardListDto {
 
-    private int boardId;
-    private String title;
-    private String nickname;
-    private String createTime;
+    private final int boardId;
+    private final String title;
+    private final String nickname;
+    private final String createTime;
 }

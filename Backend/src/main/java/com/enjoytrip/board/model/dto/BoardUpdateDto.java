@@ -12,8 +12,8 @@ import javax.validation.constraints.NotNull;
 public class BoardUpdateDto {
 
     @NotBlank
-    private String title;
+    private final String title;
 
     @NotBlank
-    private String content;
+    private final String content;
 }
