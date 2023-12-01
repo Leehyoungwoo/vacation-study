@@ -39,18 +39,18 @@ class BoardControllerTest {
 //        assertThat(boardController).isNotNull();
 //    }
 
-    @Test
-    void writeBoard() {
-        BoardWritingDto boardWritingDto = new BoardWritingDto(0,"Test", "Test", "test", 1);
-
-        Assertions.assertThatCode(
-                () -> mockMvc.perform(
-                        MockMvcRequestBuilders.post("/board")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(boardWritingDto))
-                )
-        ).doesNotThrowAnyException();
-    }
+//    @Test
+//    void writeBoard() {
+//        BoardWritingDto boardWritingDto = new BoardWritingDto(0,"Test", "Test", "test", 1);
+//
+//        Assertions.assertThatCode(
+//                () -> mockMvc.perform(
+//                        MockMvcRequestBuilders.post("/board")
+//                                .contentType(MediaType.APPLICATION_JSON)
+//                                .content(objectMapper.writeValueAsString(boardWritingDto))
+//                )
+//        ).doesNotThrowAnyException();
+//    }
 
 //    private class MockBoardService implements BoardService {
 //

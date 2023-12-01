@@ -216,11 +216,7 @@ public class MemberController {
 //        System.out.println(map);
         ResponseMessage rm = new ResponseMessage();
         try {
-
-
             memberService.updateMemberNameNickEmail(map);
-
-
             MemberDto member = memberService.findMemberById(map.get("memberId"));
             rm.setStatus(StatusEnum.OK);
             rm.setMessage("회원 정보 업데이트 성공");
