@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BoardService {
 
-    int writeBoard(BoardWritingDto boardWritingDto);
+    Integer writeBoard(BoardWritingDto boardWritingDto);
 
     BoardReadDto readBoard(int boardId);
 
@@ -20,8 +20,6 @@ public interface BoardService {
     List<BoardListDto> getBoardList(int pageNo, int pageSize);
 
     List<BoardListDto> searchBoard(String searchType, String keyword, int pageNo, int pageSize);
-
-    boolean existsBoard(int boardId);
 
     int countBoard();
 

@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @Service
@@ -22,63 +23,28 @@ public class BoardServiceImpl implements BoardService {
     private final BoardMapper boardMapper;
 
     @Override
-    @Transactional
-    public int writeBoard(BoardWritingDto boardWritingDto) {
-        if (StringUtils.isEmpty(boardWritingDto.getTitle())) {
-            throw new IllegalArgumentException("제목을 입력해주세요");
-        }
-
-        if (StringUtils.isEmpty(boardWritingDto.getContent())) {
-            throw new IllegalArgumentException("내용을 입력해주세요");
-        }
-        int boardId = boardMapper.writeBoard(boardWritingDto);
-
-        return boardId;
+    public Integer writeBoard(BoardWritingDto boardWritingDto) {
+        return boardMapper.writeBoard(boardWritingDto);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BoardReadDto readBoard(int boardId) {
-        BoardReadDto boardReadDto = boardMapper.readBoard(boardId);
-
-        if (boardReadDto == null) {
-            throw new NoSuchElementException("게시물을 찾을 수 없습니다.");
-        }
-
-        return boardReadDto;
+        return boardMapper.readBoard(boardId)
+                .orElseThrow(()->new NoSuchElementException("게시물을 찾을 수 없습니다."));
     }
 
     @Override
     @Transactional
     public void updateBoard(int boardId, BoardUpdateDto updatedBoardDto) {
-        BoardReadDto boardReadDto = boardMapper.readBoard(boardId);
-
-        if (!existsBoard(boardId)) {
-            throw new NoSuchElementException("게시물을 찾을 수 없습니다.");
-        }
-
-        if (boardReadDto.isDeleted()) {
-            throw new IllegalStateException("삭제된 게시물은 수정할 수 없습니다.");
-        }
-
-        if (StringUtils.isEmpty(updatedBoardDto.getTitle())) {
-            throw new IllegalArgumentException("제목을 입력해주세요");
-        }
-
-        if (StringUtils.isEmpty(updatedBoardDto.getContent())) {
-            throw new IllegalArgumentException("내용을 입력해주세요");
-        }
-
+        readBoard(boardId);
         boardMapper.updateBoard(boardId, updatedBoardDto);
     }
 
     @Override
     @Transactional
     public void deleteBoard(int boardId) {
-        if (!existsBoard(boardId)) {
-            throw new NoSuchElementException("게시물을 찾을 수 없습니다.");
-        }
-//        boardMapper.deleteAllCommentInBoard(boardId);
+        readBoard(boardId);
         boardMapper.deleteBoard(boardId);
     }
 
@@ -124,12 +90,6 @@ public class BoardServiceImpl implements BoardService {
 
         int offset = (pageNo - 1) * pageSize;
         return boardMapper.searchBoard(searchType, keyword, pageSize, offset);
-    }
-
-    @Override
-    @Transactional
-    public boolean existsBoard(int boardId) {
-        return boardMapper.readBoard(boardId) != null;
     }
 
     @Override

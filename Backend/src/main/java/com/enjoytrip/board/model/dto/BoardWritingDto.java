@@ -2,6 +2,8 @@ package com.enjoytrip.board.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -10,6 +12,7 @@ import javax.validation.constraints.NotNull;
 public class BoardWritingDto {
 
     @NotBlank
+    @Length(max = 100)
     private final String title;
 
     @NotBlank

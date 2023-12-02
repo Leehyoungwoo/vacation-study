@@ -14,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @RestController
 @RequestMapping("/board")
@@ -28,57 +25,21 @@ public class BoardController {
     private final BoardLikeService boardLikeService;
 
     @PostMapping
-    public ResponseEntity<ResponseMessage> writeBoard(@Valid @RequestBody BoardWritingDto boardWritingDto) {
-        ResponseMessage responseMessage = new ResponseMessage();
-        try {
-            int boardId = boardService.writeBoard(boardWritingDto);
-            responseMessage.setStatus(StatusEnum.OK);
-            responseMessage.setMessage("게시물이 작성되었습니다.");
-            responseMessage.setData("boardId", boardId);
-
-        } catch (IllegalArgumentException e) {
-            responseMessage.setStatus(StatusEnum.FAIL);
-            responseMessage.setMessage(e.getMessage());
-
-            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Integer writeBoard(@Valid @RequestBody BoardWritingDto boardWritingDto) {
+        return boardService.writeBoard(boardWritingDto);
     }
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<ResponseMessage> readBoard(@PathVariable int boardId) {
-        ResponseMessage responseMessage = new ResponseMessage();
-        try {
-            BoardReadDto boardReadDto = boardService.readBoard(boardId);
-            responseMessage.setStatus(StatusEnum.OK);
-            responseMessage.setMessage(null);
-            responseMessage.setData("boardReadDto", boardReadDto);
-        } catch (NoSuchElementException e) {
-            responseMessage.setStatus(StatusEnum.FAIL);
-            responseMessage.setMessage(e.getMessage());
-
-            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+    public ResponseEntity<BoardReadDto> readBoard(@PathVariable int boardId) {
+        return new ResponseEntity<>(boardService.readBoard(boardId), HttpStatus.OK);
     }
 
     @PutMapping("/{boardId}")
-    public ResponseEntity<ResponseMessage> updateBoard(@PathVariable int boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto) {
-        ResponseMessage responseMessage = new ResponseMessage();
-        try {
+    public ResponseEntity<Integer> updateBoard(@PathVariable int boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto) {
             boardService.updateBoard(boardId, boardUpdateDto);
-            responseMessage.setStatus(StatusEnum.OK);
-            responseMessage.setMessage("게시물이 수정되었습니다.");
-        } catch (RuntimeException e) {
-            responseMessage.setStatus(StatusEnum.FAIL);
-            responseMessage.setMessage(e.getMessage());
 
-            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+        return new ResponseEntity<>(boardId, HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}")

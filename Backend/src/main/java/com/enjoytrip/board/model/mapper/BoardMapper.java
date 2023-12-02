@@ -8,13 +8,14 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface BoardMapper {
 
     int writeBoard(BoardWritingDto boardWritingDto);
 
-    BoardReadDto readBoard(int boardId);
+    Optional<BoardReadDto> readBoard(int boardId);
 
     void updateBoard(@Param("boardId") int boardId, @Param("boardUpdateDto") BoardUpdateDto boardUpdateDto);
 
