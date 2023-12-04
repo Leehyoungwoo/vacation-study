@@ -2,6 +2,7 @@ package com.enjoytrip.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
@@ -12,8 +13,9 @@ public class MemberCreateDto {
     @NotBlank
     private final String username;
 
+    @Setter
     @NotBlank
-    private final String password;
+    private String password;
 
     @NotBlank
     private final String name;
