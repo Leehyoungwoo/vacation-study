@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -24,26 +25,32 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @NotEmpty
-    @Size(min = 6, max = 20)
+    @Size(min = 6, max = 30)
     @Column(unique = true)
     private String username;
 
+    @NotNull
     @NotEmpty
     @Size(min = 6)
     private String password;
 
+    @NotNull
     @NotEmpty
     @Size(max = 20)
     private String name;
 
+    @NotNull
     @NotEmpty
     @Size(max = 10)
     private String nickname;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @NotNull
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
