@@ -1,5 +1,6 @@
 package com.enjoytrip.domain.model.entity;
 
+import com.enjoytrip.domain.exception.InvalidEmailFormatException;
 import com.enjoytrip.domain.model.type.Role;
 import com.enjoytrip.member.dto.MemberCreateDto;
 import lombok.AllArgsConstructor;
@@ -50,7 +51,7 @@ public class Member {
     public void validateUsernameFormat() {
         String emailRegex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
         if (!this.username.matches(emailRegex)) {
-            throw new IllegalArgumentException("이메일이 올바른 형식이 아닙니다");
+            throw new InvalidEmailFormatException("이메일이 올바른 형식이 아닙니다");
         }
     }
 
