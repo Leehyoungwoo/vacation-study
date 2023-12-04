@@ -19,9 +19,11 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     @Override
     public void joinMember(MemberCreateDto memberCreateDto) {
-        String encodedPassword = passwordEncoder.encode(memberCreateDto.getPassword());
-        memberCreateDto.setPassword(encodedPassword);
-        Member member = Member.toEntity(memberCreateDto);
-        memberRepository.save(member);
+        // 비밀번호 암호화 후 저장
+        memberCreateDto
+                .setPassword(passwordEncoder
+                .encode(memberCreateDto
+                        .getPassword()));
+        memberRepository.save(Member.toEntity(memberCreateDto));
     }
 }
