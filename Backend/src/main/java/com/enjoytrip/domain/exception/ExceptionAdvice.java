@@ -17,4 +17,9 @@ public class ExceptionAdvice {
     public ResponseEntity<String> handleMemberAlreadyExistsException(MemberAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
+
+    @ExceptionHandler(DuplicateNicknameException.class)
+    public ResponseEntity<String> handleDuplicateNicknameException(DuplicateNicknameException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
 }

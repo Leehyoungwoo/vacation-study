@@ -1,5 +1,6 @@
 package com.enjoytrip.member.service;
 
+import com.enjoytrip.domain.exception.DuplicateNicknameException;
 import com.enjoytrip.domain.model.entity.Member;
 import com.enjoytrip.domain.exception.MemberAlreadyExistsException;
 import com.enjoytrip.member.dto.MemberCreateDto;
@@ -35,6 +36,13 @@ public class MemberServiceImpl implements MemberService{
         memberRepository.findByUsername(username)
                 .ifPresent(m -> {
                     throw new MemberAlreadyExistsException("이미 존재하는 회원입니다.");
+                });
+    }
+    @Transactional
+    public void validateDuplicateNickname(String nickname) {
+        memberRepository.findMemberByNickname(nickname)
+                .ifPresent(m -> {
+                    throw new DuplicateNicknameException("이미 존재하는 닉네임입니다.");
                 });
     }
 }
