@@ -40,6 +40,7 @@ public class MemberServiceImpl implements MemberService{
                     throw new MemberAlreadyExistsException("이미 존재하는 회원입니다.");
                 });
     }
+
     @Transactional
     public void validateDuplicateNickname(String nickname) {
         memberRepository.findMemberByNickname(nickname)
