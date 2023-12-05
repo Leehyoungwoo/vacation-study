@@ -44,6 +44,7 @@ public class Member {
     @NotNull
     @NotEmpty
     @Size(max = 10)
+    @Column(unique = true)
     private String nickname;
 
     @NotNull
