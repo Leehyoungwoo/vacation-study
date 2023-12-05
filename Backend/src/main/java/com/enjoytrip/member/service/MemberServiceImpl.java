@@ -23,6 +23,8 @@ public class MemberServiceImpl implements MemberService{
     public void joinMember(MemberCreateDto memberCreateDto) {
         // 중복 아이디 검증
         validateDuplicateMember(memberCreateDto.getUsername());
+        // 닉네임 중복 검증
+        validateDuplicateNickname(memberCreateDto.getNickname());
         // 비밀번호 암호화 후 저장
         memberCreateDto
                 .setPassword(passwordEncoder
