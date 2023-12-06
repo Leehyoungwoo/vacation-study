@@ -1,10 +1,13 @@
 package com.enjoytrip.security;
 
+import com.enjoytrip.jwt.JwtAccessDeniedHandler;
+import com.enjoytrip.jwt.JwtAuthenticationEntryPoint;
 import com.enjoytrip.jwt.JwtAuthenticationFilter;
 import com.enjoytrip.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,11 +23,13 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder);
+        authenticationManager = auth.build();
     }
 
     @Bean
@@ -39,8 +44,13 @@ public class SecurityConfig {
                 .antMatchers("/member/signup/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .exceptionHandling()
+                .accessDeniedHandler(new JwtAccessDeniedHandler())
+                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtUsernameAndPasswordAuthenticationFilter(jwtTokenProvider, authenticationManager), JwtAuthenticationFilter.class);
 
         return http.build();
     }

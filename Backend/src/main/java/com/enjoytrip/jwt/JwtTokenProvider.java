@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +21,8 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @Component
-public class JwtTokenProvider implements InitializingBean {
+public class
+JwtTokenProvider implements InitializingBean {
 
     private static final String AUTHORITIES_KEY = "auth";
     private final String secretKey;
@@ -97,6 +99,10 @@ public class JwtTokenProvider implements InitializingBean {
                 .getBody()
                 .get("UserId")
                 .toString();
+    }
+
+    public String resolveToken(HttpServletRequest request) {
+        return request.getHeader("X-AUTH-TOKEN");
     }
 
     public boolean validateToken(String token) {
