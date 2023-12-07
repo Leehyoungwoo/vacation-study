@@ -1,7 +1,9 @@
 package com.enjoytrip.security;
 
+import com.enjoytrip.domain.model.entity.Member;
 import com.enjoytrip.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,11 +17,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return memberRepository.findByUsername(username)
-                .map(user -> new CustomUserDetails(user.getId(), user.getUsername(),
-                        user.getPassword(),
-                        AuthorityUtils.createAuthorityList("ROLE_" + user.getRole().name())))
-                .orElseThrow(() -> new UsernameNotFoundException("아이디가 존재하지 않습니다."));
+    public UserDetails loadUserByUsername(String username) throws AuthenticationException {
+        final Member member = memberRepository.findByUsername(username)
+                                              .orElseThrow(() -> new UsernameNotFoundException("아이디가 존재하지 않습니다."));
+
+        return new CustomUserDetails(
+                member.getId(),
+                member.getUsername(),
+                member.getPassword(),
+                AuthorityUtils.createAuthorityList("ROLE_" + member.getRole().name())
+        );
     }
 }

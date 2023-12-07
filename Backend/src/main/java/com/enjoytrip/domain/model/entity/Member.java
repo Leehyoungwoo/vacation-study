@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "members")
@@ -69,7 +70,7 @@ public class Member {
                 .password(memberCreateDto.getPassword())
                 .name(memberCreateDto.getName())
                 .nickname(memberCreateDto.getNickname())
-                .role(Role.User)
+                .role(Role.USER)
                 .isDeleted(false)
                 .build();
     }

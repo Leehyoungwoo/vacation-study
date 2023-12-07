@@ -3,54 +3,57 @@ package com.enjoytrip.security;
 import com.enjoytrip.jwt.JwtAccessDeniedHandler;
 import com.enjoytrip.jwt.JwtAuthenticationEntryPoint;
 import com.enjoytrip.jwt.JwtAuthenticationFilter;
-import com.enjoytrip.jwt.JwtTokenProvider;
+import com.enjoytrip.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final CustomUserDetailsService userDetailsService;
-    private final PasswordEncoder passwordEncoder;
-    private AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder);
-        authenticationManager = auth.build();
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-//                .httpBasic().and()
-                .csrf().disable().formLogin().disable()
-                .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/member/info").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/board/**").hasRole("USER")
-                .antMatchers("/member/signup/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .exceptionHandling()
-                .accessDeniedHandler(new JwtAccessDeniedHandler())
-                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtUsernameAndPasswordAuthenticationFilter(jwtTokenProvider, authenticationManager), JwtAuthenticationFilter.class);
+            .csrf().disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests(
+                    registry -> registry.antMatchers("/admin/**").hasRole("ADMIN")
+                                        .antMatchers("/board/**").hasRole("USER")
+                                        .antMatchers("/member/info").hasAnyRole("USER", "ADMIN")
+                                        .antMatchers("/member/signup/**").permitAll()
+                                        .anyRequest().authenticated()
+            )
+            .formLogin(
+                    configurer -> configurer.successHandler(new FormLoginAuthenticationSuccessHandler(jwtProvider))
+                                            .failureHandler(new FormLoginAuthenticationFailureHandler())
+            )
+            .exceptionHandling(
+                    configurer -> configurer.accessDeniedHandler(new JwtAccessDeniedHandler())
+                                            .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+            )
+            .addFilterBefore(
+                    new JwtAuthenticationFilter(jwtProvider),
+                    UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
     }
