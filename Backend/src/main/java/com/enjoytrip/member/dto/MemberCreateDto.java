@@ -1,10 +1,9 @@
 package com.enjoytrip.member.dto;
 
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-
-import javax.validation.constraints.NotBlank;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @AllArgsConstructor
 @Getter
@@ -13,7 +12,6 @@ public class MemberCreateDto {
     @NotBlank
     private final String username;
 
-    @Setter
     @NotBlank
     private String password;
 
@@ -22,4 +20,8 @@ public class MemberCreateDto {
 
     @NotBlank
     private final String nickname;
+
+    public void encryptPassword(final PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+    }
 }

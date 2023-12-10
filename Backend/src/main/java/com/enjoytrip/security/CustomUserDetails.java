@@ -12,10 +12,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Getter
     private Long id;
-    private String username;
-    private String password;
-    private Collection<? extends GrantedAuthority> authorities;
 
+    private String username;
+
+    private String password;
+
+    private Collection<? extends GrantedAuthority> authorities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
