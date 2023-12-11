@@ -21,6 +21,9 @@ public class FormLoginAuthenticationSuccessHandler implements AuthenticationSucc
             final Authentication authentication
     ) throws IOException, ServletException {
         String token = jwtProvider.createToken(authentication);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("{\"message\":\"로그인이 되었습니다.\"}");
         response.addHeader("Authorization", "Bearer " + token);
     }
 }
