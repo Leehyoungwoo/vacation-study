@@ -26,8 +26,6 @@ public class MemberServiceImpl implements MemberService {
         validateDuplicateMember(memberCreateDto.getUsername());
         // 닉네임 중복 검증
         validateDuplicateNickname(memberCreateDto.getNickname());
-
-        memberCreateDto.encryptPassword(passwordEncoder);
         memberRepository.save(MemberMapper.toEntity(memberCreateDto));
     }
 

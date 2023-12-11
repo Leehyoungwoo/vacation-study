@@ -1,5 +1,6 @@
 package com.enjoytrip.member.dto;
 
+import javax.persistence.Convert;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,7 @@ public class MemberCreateDto {
     private final String username;
 
     @NotBlank
+    @Convert(converter = PasswordEncoder.class)
     private String password;
 
     @NotBlank
@@ -20,8 +22,4 @@ public class MemberCreateDto {
 
     @NotBlank
     private final String nickname;
-
-    public void encryptPassword(final PasswordEncoder passwordEncoder) {
-        this.password = passwordEncoder.encode(this.password);
-    }
 }
