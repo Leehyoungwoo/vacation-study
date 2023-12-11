@@ -1,18 +1,19 @@
 package com.enjoytrip.domain.model.entity;
 
 import com.enjoytrip.domain.exception.InvalidEmailFormatException;
+import com.enjoytrip.domain.model.entity.converter.PasswordConverter;
 import com.enjoytrip.domain.model.type.Role;
 import com.enjoytrip.member.dto.MemberCreateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "members")
@@ -20,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 @Getter
 @Builder
+//@ManyToOne()
+//@JoinColumn(name = "member_id")
 public class Member {
 
     @Id
@@ -35,6 +38,7 @@ public class Member {
     @NotNull
     @NotEmpty
     @Size(min = 6)
+    @Convert(converter = PasswordConverter.class)
     private String password;
 
     @NotNull

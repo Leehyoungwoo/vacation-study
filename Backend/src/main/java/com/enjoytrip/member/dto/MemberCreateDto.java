@@ -14,7 +14,6 @@ public class MemberCreateDto {
     private final String username;
 
     @NotBlank
-    @Convert(converter = PasswordEncoder.class)
     private String password;
 
     @NotBlank
