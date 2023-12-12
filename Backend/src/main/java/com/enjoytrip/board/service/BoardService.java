@@ -13,7 +13,7 @@ public interface BoardService {
 
     List<BoardReadDto> getBoardPage(int pageNo, int offset);
 
-    String updateBoard(Long boardId, BoardUpdateDto boardUpdateDto);
+    String updateBoard(Long boardId, BoardUpdateDto boardUpdateDto, Long memberId);
 
-    void deleteBoard(Long boardId);
+    void deleteBoard(Long boardId, Long memberId);
 }

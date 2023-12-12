@@ -43,13 +43,15 @@ public class BoardController {
 
     @PutMapping("/{boardId}")
     @ResponseStatus(HttpStatus.OK)
-    public String updateBoard(@PathVariable Long boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto) {
-        return boardService.updateBoard(boardId, boardUpdateDto);
+    public String updateBoard(@PathVariable Long boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getId();
+        return boardService.updateBoard(boardId, boardUpdateDto, memberId);
     }
 
     @DeleteMapping("{boardId}")
-    public String deleteBoard(@PathVariable Long boardId) {
-        boardService.deleteBoard(boardId);
+    public String deleteBoard(@PathVariable Long boardId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getId();
+        boardService.deleteBoard(boardId, memberId);
         return "글이 삭제되었습니다.";
     }
 }
