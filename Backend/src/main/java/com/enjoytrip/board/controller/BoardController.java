@@ -1,5 +1,6 @@
 package com.enjoytrip.board.controller;
 
+import com.enjoytrip.board.dto.BoardReadDto;
 import com.enjoytrip.board.dto.BoardWriteDto;
 import com.enjoytrip.board.service.BoardService;
 import com.enjoytrip.security.CustomUserDetails;
@@ -23,5 +24,11 @@ public class BoardController {
         boardWriteDto.setMemberId(customUserDetails.getId());
         boardService.writeBoard(boardWriteDto);
         return "글이 작성되었습니다.";
+    }
+
+    @GetMapping("/{boardId}")
+    @ResponseStatus(HttpStatus.OK)
+    public BoardReadDto readBoard(@PathVariable Long boardId) {
+        return boardService.readBoard(boardId);
     }
 }
