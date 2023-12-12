@@ -1,6 +1,7 @@
 package com.enjoytrip.board.service;
 
 import com.enjoytrip.board.dto.BoardReadDto;
+import com.enjoytrip.board.dto.BoardUpdateDto;
 import com.enjoytrip.board.dto.BoardWriteDto;
 import com.enjoytrip.board.mapper.BoardMapper;
 import com.enjoytrip.board.repository.BoardRepository;
@@ -51,4 +52,15 @@ public class BoardServiceImpl implements BoardService{
                 .map(BoardReadDto::new)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional
+    public String updateBoard(Long boardId, BoardUpdateDto updateDto) {
+        int updatedCount = boardRepository.updateById(boardId, updateDto.getTitle(), updateDto.getContent());
+        if (updatedCount == 0) {
+            throw new IllegalArgumentException("해당 id의 게시글이 존재하지 않습니다.");
+        }
+        return "게시글이 성공적으로 수정되었습니다.";
+    }
+
 }

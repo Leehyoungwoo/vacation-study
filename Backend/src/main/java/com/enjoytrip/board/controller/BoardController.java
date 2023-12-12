@@ -1,13 +1,11 @@
 package com.enjoytrip.board.controller;
 
 import com.enjoytrip.board.dto.BoardReadDto;
+import com.enjoytrip.board.dto.BoardUpdateDto;
 import com.enjoytrip.board.dto.BoardWriteDto;
 import com.enjoytrip.board.service.BoardService;
-import com.enjoytrip.domain.model.entity.Board;
 import com.enjoytrip.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -37,10 +35,14 @@ public class BoardController {
         return boardService.getBoardPage(pageNo, offset);
     }
 
-
     @GetMapping("/{boardId}")
     @ResponseStatus(HttpStatus.OK)
     public BoardReadDto readBoard(@PathVariable Long boardId) {
         return boardService.readBoard(boardId);
+    }
+
+    @PutMapping("/{boardId}")
+    public String updateBoard(@PathVariable Long boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto) {
+        return boardService.updateBoard(boardId, boardUpdateDto);
     }
 }
