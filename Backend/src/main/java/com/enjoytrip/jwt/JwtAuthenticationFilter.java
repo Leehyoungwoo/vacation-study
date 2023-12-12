@@ -6,6 +6,9 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.enjoytrip.security.CustomUserDetails;
+import com.enjoytrip.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,9 +31,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = jwtProvider.resolveToken(request);
 
         if (StringUtils.hasText(token) && jwtProvider.validateToken(token)) {
-            String userId = jwtProvider.getUserIdFromToken(token);
+            Long userId = Long.parseLong(jwtProvider.getUserIdFromToken(token));
+            String username = jwtProvider.getUsernameFromToken(token);
+            String nickname = jwtProvider.getNicknameFromToken(token);
             List<GrantedAuthority> authorities = jwtProvider.getAuthorities(token);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userId, token, authorities);
+            // CustomUserDetails를 로드하고 Authentication 객체 생성
+            CustomUserDetails userDetails = new CustomUserDetails(userId, username, "", nickname, authorities);
+            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, token, authorities);
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

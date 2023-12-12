@@ -7,6 +7,7 @@ import com.enjoytrip.member.dto.MemberCreateDto;
 import com.enjoytrip.member.mapper.MemberMapper;
 import com.enjoytrip.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,12 @@ public class MemberServiceImpl implements MemberService {
         // 닉네임 중복 검증
         validateDuplicateNickname(memberCreateDto.getNickname());
         memberRepository.save(MemberMapper.toEntity(memberCreateDto));
+    }
+
+    @Override
+    public Member findMemberById(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(()-> new UsernameNotFoundException("회원이 존재하지 않습니다."));
     }
 
     private void validateDuplicateMember(String username) {

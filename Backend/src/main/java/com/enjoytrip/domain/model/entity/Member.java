@@ -21,8 +21,6 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Getter
 @Builder
-//@ManyToOne()
-//@JoinColumn(name = "member_id")
 public class Member {
 
     @Id

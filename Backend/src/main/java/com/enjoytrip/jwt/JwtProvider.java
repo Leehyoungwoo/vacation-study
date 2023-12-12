@@ -30,7 +30,6 @@ import org.springframework.util.StringUtils;
 public class JwtProvider {
 
     private static final String AUTHORITIES_KEY = "authorities";
-
     private final String jwtHeaderKey;
     private final String secretKey;
     private final long tokenValidityInMilliseconds;
@@ -62,7 +61,7 @@ public class JwtProvider {
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
         return Jwts.builder()
-                .setSubject(principal.getUsername())
+                .claim("username",principal.getUsername())
                 .claim(AUTHORITIES_KEY, authorities)
                 .claim("id", principal.getId())
                 .claim("nickname", principal.getNickname())
@@ -99,7 +98,7 @@ public class JwtProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("Nickname")
+                .get("nickname")
                 .toString();
     }
 
@@ -109,7 +108,7 @@ public class JwtProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("UserId")
+                .get("id")
                 .toString();
     }
 
@@ -120,20 +119,34 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
-        String[] autorities = claims.get("authorites", String.class)
+        String[] authorities = claims.get("authorities", String.class)
                 .split(",");
 
-        if (!StringUtils.hasText(autorities[0])) {
+        if (!StringUtils.hasText(authorities[0])) {
             return Collections.emptyList();
         }
 
-        return Arrays.stream(autorities)
+        return Arrays.stream(authorities)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
 
+    public String getUsernameFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("username")
+                .toString();
+    }
+
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader(jwtHeaderKey);
+        String bearerToken = request.getHeader(jwtHeaderKey);
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.replace("Bearer ", "");
+        }
+        return null;
     }
 
     public boolean validateToken(String token) {
@@ -154,5 +167,4 @@ public class JwtProvider {
         }
         return false;
     }
-
 }
