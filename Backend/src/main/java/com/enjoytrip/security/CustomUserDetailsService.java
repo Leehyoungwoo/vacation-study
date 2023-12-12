@@ -20,6 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws AuthenticationException {
         final Member member = memberRepository.findByUsername(username)
                                               .orElseThrow(() -> new UsernameNotFoundException("아이디가 존재하지 않습니다."));
+        if (member.isDeleted()) {
+            throw new UsernameNotFoundException("삭제된 사용자입니다.");
+        }
 
         return new CustomUserDetails(
                 member.getId(),
