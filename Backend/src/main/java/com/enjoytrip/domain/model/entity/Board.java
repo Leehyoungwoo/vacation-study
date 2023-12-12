@@ -35,7 +35,7 @@ public class Board {
     private String content;
 
     @CreationTimestamp
-    @Column(name="current_time")
+    @Column(name="created_at")
     private Timestamp currentTime;
 
     @ManyToOne(fetch = FetchType.LAZY)

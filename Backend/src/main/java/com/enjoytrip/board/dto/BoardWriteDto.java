@@ -1,24 +1,26 @@
 package com.enjoytrip.board.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
-@AllArgsConstructor
 @Getter
+@NoArgsConstructor
 public class BoardWriteDto {
 
-    @NotNull
     @NotEmpty
-    private final String title;
+    private String title;
 
-    @NotNull
     @NotEmpty
-    private final String content;
+    private String content;
 
-    @NotNull
-    @NotEmpty
-    private final Long memberId;
+    @Setter
+    private Long memberId;
+
+    public BoardWriteDto(@NotEmpty String title, @NotEmpty String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
