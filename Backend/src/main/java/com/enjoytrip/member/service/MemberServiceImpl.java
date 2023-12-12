@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
@@ -34,6 +33,15 @@ public class MemberServiceImpl implements MemberService {
     public Member findMemberById(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(()-> new UsernameNotFoundException("회원이 존재하지 않습니다."));
+    }
+
+    @Transactional
+    @Override
+    public void deleteMember(Long id) {
+        memberRepository.findById(id)
+                .ifPresent(m -> {
+                    memberRepository.deleteMember(id);
+                });
     }
 
     private void validateDuplicateMember(String username) {

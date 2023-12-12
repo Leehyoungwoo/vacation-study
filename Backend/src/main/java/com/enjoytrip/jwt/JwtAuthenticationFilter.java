@@ -35,7 +35,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String username = jwtProvider.getUsernameFromToken(token);
             String nickname = jwtProvider.getNicknameFromToken(token);
             List<GrantedAuthority> authorities = jwtProvider.getAuthorities(token);
-            // CustomUserDetails를 로드하고 Authentication 객체 생성
             CustomUserDetails userDetails = new CustomUserDetails(userId, username, "", nickname, authorities);
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, token, authorities);
 

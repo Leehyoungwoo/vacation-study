@@ -7,4 +7,6 @@ public interface MemberService {
     void joinMember(MemberCreateDto memberCreateDto);
 
     Member findMemberById(Long id);
+
+    void deleteMember(Long id);
 }
