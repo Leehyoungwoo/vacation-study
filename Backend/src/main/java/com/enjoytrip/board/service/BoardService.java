@@ -14,4 +14,6 @@ public interface BoardService {
     List<BoardReadDto> getBoardPage(int pageNo, int offset);
 
     String updateBoard(Long boardId, BoardUpdateDto boardUpdateDto);
+
+    void deleteBoard(Long boardId);
 }

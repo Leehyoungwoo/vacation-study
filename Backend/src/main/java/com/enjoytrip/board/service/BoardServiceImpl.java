@@ -56,11 +56,21 @@ public class BoardServiceImpl implements BoardService{
     @Override
     @Transactional
     public String updateBoard(Long boardId, BoardUpdateDto updateDto) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(()->new BoardNotFoundException("게시글을 찾을 수 없습니다."));
         int updatedCount = boardRepository.updateById(boardId, updateDto.getTitle(), updateDto.getContent());
         if (updatedCount == 0) {
             throw new IllegalArgumentException("해당 id의 게시글이 존재하지 않습니다.");
         }
         return "게시글이 성공적으로 수정되었습니다.";
+    }
+
+    @Override
+    @Transactional
+    public void deleteBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(()->new BoardNotFoundException("게시글을 찾을 수 없습니다."));
+        boardRepository.markAsDeleted(boardId);
     }
 
 }

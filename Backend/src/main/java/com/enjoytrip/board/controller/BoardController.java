@@ -42,7 +42,14 @@ public class BoardController {
     }
 
     @PutMapping("/{boardId}")
+    @ResponseStatus(HttpStatus.OK)
     public String updateBoard(@PathVariable Long boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto) {
         return boardService.updateBoard(boardId, boardUpdateDto);
+    }
+
+    @DeleteMapping("{boardId}")
+    public String deleteBoard(@PathVariable Long boardId) {
+        boardService.deleteBoard(boardId);
+        return "글이 삭제되었습니다.";
     }
 }
