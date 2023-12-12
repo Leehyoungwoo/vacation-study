@@ -69,7 +69,6 @@ public class BoardServiceImpl implements BoardService{
             throw new IllegalArgumentException("수정이 되지 않았습니다.");
         }
 
-
         return "게시글이 성공적으로 수정되었습니다.";
     }
 
