@@ -1,6 +1,7 @@
 package com.enjoytrip.member.service;
 
-import com.enjoytrip.board.dto.UpdateNicknameDto;
+import com.enjoytrip.member.dto.MemberPasswordUpdateDto;
+import com.enjoytrip.member.dto.UpdateNicknameDto;
 import com.enjoytrip.domain.exception.DuplicateNicknameException;
 import com.enjoytrip.domain.model.entity.Member;
 import com.enjoytrip.domain.exception.MemberAlreadyExistsException;
@@ -8,7 +9,9 @@ import com.enjoytrip.member.dto.MemberCreateDto;
 import com.enjoytrip.member.mapper.MemberMapper;
 import com.enjoytrip.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
@@ -49,6 +53,21 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다."));
         memberRepository.updateNickname(id, updateNicknameDto.getNewNickname());
+    }
+
+    @Transactional
+    @Override
+    public void updatePassword(Long id, MemberPasswordUpdateDto memberPasswordUpdateDto) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다."));
+
+        String currentPassword = memberPasswordUpdateDto.getCurrentPassword();
+        String newPassword = memberPasswordUpdateDto.getNewPassword();
+
+        if (!passwordEncoder.matches(currentPassword, member.getPassword())) {
+            throw new BadCredentialsException("현재 비밀번호가 일치하지 않습니다.");
+        }
+        memberRepository.updatePassword(id, newPassword);
     }
 
     private void validateDuplicateMember(String username) {

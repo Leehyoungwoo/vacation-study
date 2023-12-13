@@ -1,4 +1,4 @@
-package com.enjoytrip.board.dto;
+package com.enjoytrip.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
