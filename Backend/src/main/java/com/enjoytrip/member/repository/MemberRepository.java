@@ -25,4 +25,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("update Member m set m.isDeleted = true where m.id = :id and m.isDeleted = false")
     void deleteMember(@Param("id") Long id);
 
+    @Modifying
+    @Query("update Member m set m.nickname = :nickname where m.id = :id")
+    void updateNickname(@Param("id") Long id, @Param("nickname") String newNickname);
 }
