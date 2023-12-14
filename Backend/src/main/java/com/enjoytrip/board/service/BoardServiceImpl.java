@@ -46,12 +46,8 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public List<BoardReadDto> getBoardPage(int pageNo, int offset) {
-        Pageable pageable = PageRequest.of(pageNo - 1, offset, Sort.by("id").descending());
-        Page<Board> boardPage = boardRepository.findByIsDeletedFalse(pageable);
-        return boardPage.stream()
-                .map(BoardReadDto::new)
-                .collect(Collectors.toList());
+    public Page<BoardReadDto> getBoardPage(Pageable pageable) {
+        return boardRepository.findByIsDeletedFalse(pageable).map(BoardReadDto::new);
     }
 
     @Override

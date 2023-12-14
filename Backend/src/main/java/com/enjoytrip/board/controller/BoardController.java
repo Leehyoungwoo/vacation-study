@@ -6,7 +6,11 @@ import com.enjoytrip.board.dto.BoardWriteDto;
 import com.enjoytrip.board.service.BoardService;
 import com.enjoytrip.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +34,8 @@ public class BoardController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<BoardReadDto> getBoardPage(@RequestParam(defaultValue = "1") int pageNo,
-                                           @RequestParam(defaultValue = "5") int offset) {
-        return boardService.getBoardPage(pageNo, offset);
+    public Page<BoardReadDto> getBoardPage(@PageableDefault(size = 20)Pageable pageable) {
+        return boardService.getBoardPage(pageable);
     }
 
     @GetMapping("/{boardId}")
@@ -43,6 +46,7 @@ public class BoardController {
 
     @PutMapping("/{boardId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("@authService.authorizeToUpdateBoard(#userDetails.getId(), #boardId)")
     public String updateBoard(@PathVariable Long boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long memberId = userDetails.getId();
         return boardService.updateBoard(boardId, boardUpdateDto, memberId);
