@@ -15,7 +15,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,15 +25,14 @@ public class BoardController {
 
     @PostMapping("write")
     @ResponseStatus(HttpStatus.CREATED)
-    public String writeBoard(@Valid @RequestBody BoardWriteDto boardWriteDto, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public Long writeBoard(@Valid @RequestBody BoardWriteDto boardWriteDto, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         boardWriteDto.setMemberId(customUserDetails.getId());
-        boardService.writeBoard(boardWriteDto);
-        return "글이 작성되었습니다.";
+        return boardService.writeBoard(boardWriteDto);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<BoardReadDto> getBoardPage(@PageableDefault(size = 20)Pageable pageable) {
+    public Page<BoardReadDto> getBoardPage(@PageableDefault(size = 20) Pageable pageable) {
         return boardService.getBoardPage(pageable);
     }
 
@@ -53,6 +51,7 @@ public class BoardController {
     }
 
     @DeleteMapping("{boardId}")
+    @PreAuthorize("@authService.authorizeToUpdateBoard(#userDetails.getId(), #boardId)")
     public String deleteBoard(@PathVariable Long boardId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long memberId = userDetails.getId();
         boardService.deleteBoard(boardId, memberId);
