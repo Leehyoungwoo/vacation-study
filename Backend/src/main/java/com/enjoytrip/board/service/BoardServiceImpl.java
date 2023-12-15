@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BoardServiceImpl implements BoardService, UserDetailsService {
+public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
@@ -66,16 +66,5 @@ public class BoardServiceImpl implements BoardService, UserDetailsService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardNotFoundException("게시글을 찾을 수 없습니다."));
         board.delete();
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("아이디가 존재하지 않습니다."));
-        if (member.isDeleted()) {
-            throw new UsernameNotFoundException("삭제된 사용자입니다.");
-        }
-
-        return member;
     }
 }

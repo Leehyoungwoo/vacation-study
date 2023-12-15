@@ -1,25 +1,34 @@
 package com.enjoytrip.member.controller;
 
-import com.enjoytrip.member.dto.MemberPasswordUpdateDto;
-import com.enjoytrip.member.dto.UpdateNicknameDto;
+import com.enjoytrip.auth.AuthService;
 import com.enjoytrip.domain.model.entity.Member;
 import com.enjoytrip.member.dto.MemberCreateDto;
 import com.enjoytrip.member.dto.MemberInfoDto;
+import com.enjoytrip.member.dto.MemberPasswordUpdateDto;
+import com.enjoytrip.member.dto.UpdateNicknameDto;
 import com.enjoytrip.member.service.MemberService;
-import javax.validation.Valid;
-
 import com.enjoytrip.security.CustomUserDetails;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
 
+    private final AuthService authService;
     private final MemberService memberService;
 
     @PostMapping("/signup")
@@ -60,6 +69,7 @@ public class MemberController {
 
     @PutMapping("/password")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("@authService.authenticatePassword(#userDetails.getId(), #memberPasswordUpdateDto.getCurrentPassword())")
     public String updatePassword(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid MemberPasswordUpdateDto memberPasswordUpdateDto){
         Long id = userDetails.getId();
         memberService.updatePassword(id, memberPasswordUpdateDto);

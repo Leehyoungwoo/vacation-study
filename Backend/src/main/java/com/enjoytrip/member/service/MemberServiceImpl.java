@@ -20,10 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class MemberServiceImpl implements MemberService, UserDetailsService {
+public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
@@ -62,13 +61,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     public void updatePassword(Long id, MemberPasswordUpdateDto memberPasswordUpdateDto) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다."));
-
-        String currentPassword = memberPasswordUpdateDto.getCurrentPassword();
         String newPassword = memberPasswordUpdateDto.getNewPassword();
-
-        if (!passwordEncoder.matches(currentPassword, member.getPassword())) {
-            throw new BadCredentialsException("현재 비밀번호가 일치하지 않습니다.");
-        }
         member.changePassword(newPassword);
     }
 

@@ -1,11 +1,13 @@
 package com.enjoytrip.member.service;
 
-import com.enjoytrip.member.dto.MemberPasswordUpdateDto;
-import com.enjoytrip.member.dto.UpdateNicknameDto;
 import com.enjoytrip.domain.model.entity.Member;
 import com.enjoytrip.member.dto.MemberCreateDto;
+import com.enjoytrip.member.dto.MemberPasswordUpdateDto;
+import com.enjoytrip.member.dto.UpdateNicknameDto;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface MemberService {
+public interface MemberService extends UserDetailsService {
+
     void joinMember(MemberCreateDto memberCreateDto);
 
     Member findMemberById(Long id);
