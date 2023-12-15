@@ -22,13 +22,11 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
     @NotNull
     @NotEmpty
     @Size(max=50)
     private String title;
 
-    @Setter
     @NotNull
     @NotEmpty
     @Size(max=1000)
