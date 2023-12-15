@@ -1,14 +1,14 @@
 package com.enjoytrip.board.dto;
 
 import com.enjoytrip.domain.model.entity.Board;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 public class BoardReadDto {
+
     private String title;
 
     private String content;

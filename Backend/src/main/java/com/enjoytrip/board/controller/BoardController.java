@@ -5,6 +5,7 @@ import com.enjoytrip.board.dto.BoardUpdateDto;
 import com.enjoytrip.board.dto.BoardWriteDto;
 import com.enjoytrip.board.service.BoardService;
 import com.enjoytrip.security.CustomUserDetails;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +13,15 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +32,8 @@ public class BoardController {
 
     @PostMapping("write")
     @ResponseStatus(HttpStatus.CREATED)
-    public Long writeBoard(@Valid @RequestBody BoardWriteDto boardWriteDto, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public Long writeBoard(@Valid @RequestBody BoardWriteDto boardWriteDto,
+                           @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         boardWriteDto.setMemberId(customUserDetails.getId());
         return boardService.writeBoard(boardWriteDto);
     }
@@ -45,7 +53,8 @@ public class BoardController {
     @PutMapping("/{boardId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@authService.authorizeToUpdateBoard(#userDetails.getId(), #boardId)")
-    public String updateBoard(@PathVariable Long boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public String updateBoard(@PathVariable Long boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto,
+                              @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long memberId = userDetails.getId();
         return boardService.updateBoard(boardId, boardUpdateDto, memberId);
     }

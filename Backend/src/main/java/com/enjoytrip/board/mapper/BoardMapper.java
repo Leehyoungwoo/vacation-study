@@ -11,10 +11,10 @@ public final class BoardMapper {
 
     public static Board toEntity(BoardWriteDto boardWriteDto, Member member) {
         return Board.builder()
-                .title(boardWriteDto.getTitle())
-                .content(boardWriteDto.getContent())
-                .member(member)
-                .isDeleted(false)
-                .build();
+                    .title(boardWriteDto.getTitle())
+                    .content(boardWriteDto.getContent())
+                    .member(member)
+                    .isDeleted(false)
+                    .build();
     }
 }

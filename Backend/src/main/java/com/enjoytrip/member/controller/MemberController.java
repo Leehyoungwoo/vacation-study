@@ -7,7 +7,6 @@ import com.enjoytrip.member.dto.MemberInfoDto;
 import com.enjoytrip.member.dto.MemberPasswordUpdateDto;
 import com.enjoytrip.member.dto.UpdateNicknameDto;
 import com.enjoytrip.member.service.MemberService;
-import com.enjoytrip.security.CustomUserDetails;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,39 +38,41 @@ public class MemberController {
 
     @GetMapping("/info")
     @ResponseStatus(HttpStatus.OK)
-    public MemberInfoDto getMemberInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        Long id = userDetails.getId();
+    public MemberInfoDto getMemberInfo(@AuthenticationPrincipal Member principal) {
+        Long id = principal.getId();
         Member member = memberService.findMemberById(id);
 
         return MemberInfoDto.builder()
-                .username(member.getUsername())
-                .nickname(member.getNickname())
-                .name(member.getName())
-                .role(member.getRole().name())
-                .build();
+                            .username(member.getUsername())
+                            .nickname(member.getNickname())
+                            .name(member.getName())
+                            .role(member.getRole().name())
+                            .build();
     }
 
     @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteMember(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        Long id = userDetails.getId();
+    public String deleteMember(@AuthenticationPrincipal Member principal) {
+        Long id = principal.getId();
         memberService.deleteMember(id);
         return "회원 탈퇴가 완료되었습니다.";
     }
 
     @PutMapping("/nickname")
     @ResponseStatus(HttpStatus.OK)
-    public String updateNickname(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid UpdateNicknameDto updateNicknameDto) {
-        Long id = userDetails.getId();
+    public String updateNickname(@AuthenticationPrincipal Member principal,
+                                 @RequestBody @Valid UpdateNicknameDto updateNicknameDto) {
+        Long id = principal.getId();
         memberService.updateNickName(id, updateNicknameDto);
         return "닉네임 수정이 완료되었습니다.";
     }
 
     @PutMapping("/password")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("@authService.authenticatePassword(#userDetails.getId(), #memberPasswordUpdateDto.getCurrentPassword())")
-    public String updatePassword(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid MemberPasswordUpdateDto memberPasswordUpdateDto){
-        Long id = userDetails.getId();
+    @PreAuthorize("@authService.authenticatePassword(#principal.getId(), #memberPasswordUpdateDto.getCurrentPassword())")
+    public String updatePassword(@AuthenticationPrincipal Member principal,
+                                 @RequestBody @Valid MemberPasswordUpdateDto memberPasswordUpdateDto) {
+        Long id = principal.getId();
         memberService.updatePassword(id, memberPasswordUpdateDto);
         return "비밀번호를 변경하였습니다.";
     }

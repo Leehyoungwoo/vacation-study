@@ -4,16 +4,11 @@ import com.enjoytrip.jwt.JwtAccessDeniedHandler;
 import com.enjoytrip.jwt.JwtAuthenticationEntryPoint;
 import com.enjoytrip.jwt.JwtAuthenticationFilter;
 import com.enjoytrip.jwt.JwtProvider;
-import com.enjoytrip.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -43,28 +38,28 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
 //                .authenticationProvider(daoAuthenticationProvider())
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests(
-                        registry -> registry.antMatchers("/admin/**").hasRole("ADMIN")
-                                            .antMatchers("/board/**").hasRole("USER")
-                                            .antMatchers("/member/info").hasAnyRole("USER", "ADMIN")
-                                            .antMatchers("/member/signup/**").permitAll()
-                                            .anyRequest().authenticated()
-                )
-                .formLogin(
-                        configurer -> configurer.successHandler(new FormLoginAuthenticationSuccessHandler(jwtProvider))
-                                                .failureHandler(new FormLoginAuthenticationFailureHandler())
-                )
-                .exceptionHandling(
-                        configurer -> configurer.accessDeniedHandler(new JwtAccessDeniedHandler())
-                                                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-                )
-                .addFilterBefore(
-                        new JwtAuthenticationFilter(jwtProvider),
-                        UsernamePasswordAuthenticationFilter.class
-                );
+.csrf().disable()
+.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+.and()
+.authorizeRequests(
+        registry -> registry.antMatchers("/admin/**").hasRole("ADMIN")
+                            .antMatchers("/board/**").hasRole("USER")
+                            .antMatchers("/member/info").hasAnyRole("USER", "ADMIN")
+                            .antMatchers("/member/signup/**").permitAll()
+                            .anyRequest().authenticated()
+)
+.formLogin(
+        configurer -> configurer.successHandler(new FormLoginAuthenticationSuccessHandler(jwtProvider))
+                                .failureHandler(new FormLoginAuthenticationFailureHandler())
+)
+.exceptionHandling(
+        configurer -> configurer.accessDeniedHandler(new JwtAccessDeniedHandler())
+                                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+)
+.addFilterBefore(
+        new JwtAuthenticationFilter(jwtProvider),
+        UsernamePasswordAuthenticationFilter.class
+);
 
         return http.build();
     }
