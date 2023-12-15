@@ -5,7 +5,7 @@ spring:
 
 jwt:
   header: Authorization
-  secret:
+  secret: # openssl rand -base64 128 | tr -d '\n'
 
 ---
 spring:
