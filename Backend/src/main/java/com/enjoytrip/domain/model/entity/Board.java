@@ -1,9 +1,7 @@
 package com.enjoytrip.domain.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.enjoytrip.board.dto.BoardUpdateDto;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -24,11 +22,13 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @NotNull
     @NotEmpty
     @Size(max=50)
     private String title;
 
+    @Setter
     @NotNull
     @NotEmpty
     @Size(max=1000)
@@ -45,4 +45,12 @@ public class Board {
     @Column(name="is_deleted")
     private boolean isDeleted;
 
+    public void delete() {
+        this.isDeleted = true;
+    }
+
+    public void update(BoardUpdateDto boardUpdateDto) {
+        this.title = boardUpdateDto.getTitle();
+        this.content = boardUpdateDto.getContent();
+    }
 }

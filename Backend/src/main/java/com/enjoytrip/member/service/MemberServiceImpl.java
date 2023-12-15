@@ -42,17 +42,17 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public void deleteMember(Long id) {
-        memberRepository.findById(id)
+        Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다."));
-        memberRepository.deleteMember(id);
+        member.delete();
     }
 
     @Override
     @Transactional
     public void updateNickName(Long id, UpdateNicknameDto updateNicknameDto) {
-        memberRepository.findById(id)
+        Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다."));
-        memberRepository.updateNickname(id, updateNicknameDto.getNewNickname());
+        member.changeNickname(updateNicknameDto.getNewNickname());
     }
 
     @Transactional
@@ -67,7 +67,7 @@ public class MemberServiceImpl implements MemberService {
         if (!passwordEncoder.matches(currentPassword, member.getPassword())) {
             throw new BadCredentialsException("현재 비밀번호가 일치하지 않습니다.");
         }
-        memberRepository.updatePassword(id, newPassword);
+        member.changePassword(newPassword);
     }
 
     private void validateDuplicateMember(String username) {

@@ -63,4 +63,16 @@ public class Member {
             throw new InvalidEmailFormatException("이메일이 올바른 형식이 아닙니다.");
         }
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
+
+    public void changeNickname(String newNickname) {
+        this.nickname = newNickname;
+    }
 }

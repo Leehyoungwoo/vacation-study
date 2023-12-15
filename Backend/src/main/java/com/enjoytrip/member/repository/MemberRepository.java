@@ -21,15 +21,15 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member m where m.id = :id and m.isDeleted = false ")
     Optional<Member> findById(Long id);
 
-    @Modifying
-    @Query("update Member m set m.isDeleted = true where m.id = :id and m.isDeleted = false")
-    void deleteMember(@Param("id") Long id);
-
-    @Modifying
-    @Query("update Member m set m.nickname = :nickname where m.id = :id")
-    void updateNickname(@Param("id") Long id, @Param("nickname") String newNickname);
-
-    @Modifying
-    @Query("update Member m set m.password = :newPassword where m.id = :id")
-    void updatePassword(@Param("id") Long id, @Param("newPassword") String newPassword);
+//    @Modifying
+//    @Query("update Member m set m.isDeleted = true where m.id = :id and m.isDeleted = false")
+//    void deleteMember(@Param("id") Long id);
+//
+//    @Modifying
+//    @Query("update Member m set m.nickname = :nickname where m.id = :id")
+//    void updateNickname(@Param("id") Long id, @Param("nickname") String newNickname);
+//
+//    @Modifying
+//    @Query("update Member m set m.password = :newPassword where m.id = :id")
+//    void updatePassword(@Param("id") Long id, @Param("newPassword") String newPassword);
 }
