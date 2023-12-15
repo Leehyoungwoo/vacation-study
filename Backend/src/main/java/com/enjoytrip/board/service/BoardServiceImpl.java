@@ -9,9 +9,13 @@ import com.enjoytrip.domain.exception.BoardNotFoundException;
 import com.enjoytrip.domain.model.entity.Board;
 import com.enjoytrip.domain.model.entity.Member;
 import com.enjoytrip.member.repository.MemberRepository;
+import com.enjoytrip.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BoardServiceImpl implements BoardService {
+public class BoardServiceImpl implements BoardService, UserDetailsService {
 
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
@@ -64,4 +68,14 @@ public class BoardServiceImpl implements BoardService {
         board.delete();
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        final Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("아이디가 존재하지 않습니다."));
+        if (member.isDeleted()) {
+            throw new UsernameNotFoundException("삭제된 사용자입니다.");
+        }
+
+        return member;
+    }
 }

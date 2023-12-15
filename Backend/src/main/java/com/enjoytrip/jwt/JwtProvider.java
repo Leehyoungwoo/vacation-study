@@ -61,7 +61,6 @@ public class JwtProvider {
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
         return Jwts.builder()
-                .claim("username",principal.getUsername())
                 .claim(AUTHORITIES_KEY, authorities)
                 .claim("id", principal.getId())
                 .claim("nickname", principal.getNickname())
@@ -70,27 +69,26 @@ public class JwtProvider {
                 .compact();
     }
 
-    public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toCollection(ArrayList::new));
-        CustomUserDetails principal = new CustomUserDetails(
-                Long.parseLong(claims.get("id").toString()),
-                claims.getSubject(),
-                "",
-                claims.get("nickname").toString(),
-                authorities
-        );
-
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
-    }
+//    public Authentication getAuthentication(String token) {
+//        Claims claims = Jwts.parserBuilder()
+//                .setSigningKey(key)
+//                .build()
+//                .parseClaimsJws(token)
+//                .getBody();
+//
+//        Collection<? extends GrantedAuthority> authorities =
+//                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+//                        .map(SimpleGrantedAuthority::new)
+//                        .collect(Collectors.toCollection(ArrayList::new));
+//        CustomUserDetails principal = new CustomUserDetails(
+//                Long.parseLong(claims.get("id").toString()),
+//                "",
+//                claims.get("nickname").toString(),
+//                authorities
+//        );
+//
+//        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+//    }
 
     public String getNicknameFromToken(String token) {
         return Jwts.parserBuilder()
@@ -129,16 +127,6 @@ public class JwtProvider {
         return Arrays.stream(authorities)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-    }
-
-    public String getUsernameFromToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("username")
-                .toString();
     }
 
     public String resolveToken(HttpServletRequest request) {

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.Transient;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -22,11 +23,9 @@ public class CustomUserDetails implements UserDetails {
     @Getter
     private String nickname;
 
-    private Collection<? extends GrantedAuthority> authorities;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
+        return null;
     }
 
     @Override
