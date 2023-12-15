@@ -1,0 +1,35 @@
+spring:
+  config:
+    activate:
+      on-profile: common
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: db-local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/vacationStudy?serverTimezone=UTC&characterEncoding=UTF-8
+    username:
+    password:
+
+---
+spring:
+  config:
+    activate:
+      on-profile: db-prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url:
+    username:
+    password:

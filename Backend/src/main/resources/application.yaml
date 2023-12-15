@@ -14,7 +14,7 @@ spring:
         - security-local
       prob:
         - db-prod
-        - security-proda
+        - security-prod
     include:
       - db
       - security
