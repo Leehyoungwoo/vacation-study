@@ -17,4 +17,6 @@ public class BoardUpdateDto {
     @NotEmpty
     @NotNull
     private final String content;
+
+
 }

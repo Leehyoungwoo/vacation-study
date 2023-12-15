@@ -1,0 +1,21 @@
+package com.enjoytrip.comment.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+@Getter
+@AllArgsConstructor
+public class CommentWriteDto {
+
+    @NotBlank
+    @Size(max = 20)
+    private String content;
+
+    @NotNull
+    private Long boardId;
+}
