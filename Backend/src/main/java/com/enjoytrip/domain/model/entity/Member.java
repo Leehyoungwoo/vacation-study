@@ -3,12 +3,11 @@ package com.enjoytrip.domain.model.entity;
 import com.enjoytrip.domain.exception.InvalidEmailFormatException;
 import com.enjoytrip.domain.model.entity.converter.PasswordConverter;
 import com.enjoytrip.domain.model.type.Role;
-import com.enjoytrip.member.dto.MemberCreateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.apache.commons.validator.routines.EmailValidator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -60,20 +59,8 @@ public class Member {
 
     @PrePersist
     public void validateUsernameFormat() {
-        String emailRegex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-        if (!this.username.matches(emailRegex)) {
-            throw new InvalidEmailFormatException("이메일이 올바른 형식이 아닙니다");
+        if (!EmailValidator.getInstance().isValid(this.username)) {
+            throw new InvalidEmailFormatException("이메일이 올바른 형식이 아닙니다.");
         }
-    }
-
-    public static Member toEntity(MemberCreateDto memberCreateDto) {
-        return Member.builder()
-                .username(memberCreateDto.getUsername())
-                .password(memberCreateDto.getPassword())
-                .name(memberCreateDto.getName())
-                .nickname(memberCreateDto.getNickname())
-                .role(Role.USER)
-                .isDeleted(false)
-                .build();
     }
 }

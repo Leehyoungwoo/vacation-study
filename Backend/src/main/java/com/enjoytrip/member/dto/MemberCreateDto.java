@@ -18,5 +18,5 @@ public class MemberCreateDto {
     private final String name;
 
     @NotBlank
-        private final String nickname;
+    private final String nickname;
 }
