@@ -23,13 +23,15 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+                                            Authentication authResult) {
         String token = jwtProvider.createToken(authResult);
         response.addHeader("Authorization", "Bearer " + token);
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                              AuthenticationException failed) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write("Authentication failed: " + failed.getMessage());
     }

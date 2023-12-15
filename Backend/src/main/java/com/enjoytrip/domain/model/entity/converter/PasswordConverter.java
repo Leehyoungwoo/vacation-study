@@ -1,9 +1,9 @@
 package com.enjoytrip.domain.model.entity.converter;
 
+import javax.persistence.AttributeConverter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import javax.persistence.AttributeConverter;
 
 public class PasswordConverter implements AttributeConverter<String, String>, ApplicationContextAware {
 

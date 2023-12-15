@@ -1,10 +1,9 @@
 package com.enjoytrip.board.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Getter
 @AllArgsConstructor

@@ -10,13 +10,10 @@ public class MemberCreateDto {
 
     @NotBlank
     private final String username;
-
-    @NotBlank
-    private String password;
-
     @NotBlank
     private final String name;
-
     @NotBlank
     private final String nickname;
+    @NotBlank
+    private String password;
 }
