@@ -20,8 +20,8 @@ public class ExceptionAdvice {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
-    @ExceptionHandler(DuplicateNicknameException.class)
-    public ResponseEntity<String> handleDuplicateNicknameException(DuplicateNicknameException e) {
+    @ExceptionHandler(DuplicatedNicknameException.class)
+    public ResponseEntity<String> handleDuplicateNicknameException(DuplicatedNicknameException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 

@@ -1,7 +1,8 @@
 package com.enjoytrip.member.service;
 
-import com.enjoytrip.domain.exception.DuplicateNicknameException;
+import com.enjoytrip.domain.exception.DuplicatedNicknameException;
 import com.enjoytrip.domain.exception.MemberAlreadyExistsException;
+import com.enjoytrip.domain.exception.MemberNotFoundException;
 import com.enjoytrip.domain.model.entity.Member;
 import com.enjoytrip.member.dto.MemberCreateDto;
 import com.enjoytrip.member.dto.MemberPasswordUpdateDto;
@@ -9,11 +10,12 @@ import com.enjoytrip.member.dto.UpdateNicknameDto;
 import com.enjoytrip.member.mapper.MemberMapper;
 import com.enjoytrip.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.enjoytrip.domain.exception.ExceptionMessage.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,69 +24,63 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 
-    @Transactional
     @Override
-    public void joinMember(MemberCreateDto memberCreateDto) {
-        // 중복 아이디 검증
-        validateDuplicateMember(memberCreateDto.getUsername());
-        // 닉네임 중복 검증
-        validateDuplicateNickname(memberCreateDto.getNickname());
-        memberRepository.save(MemberMapper.toEntity(memberCreateDto));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return memberRepository.findByUsernameAndIsDeletedFalse(username)
+                .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
     }
 
     @Override
     public Member findMemberById(Long id) {
         return memberRepository.findById(id)
-                               .orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
     }
 
-    @Transactional
     @Override
-    public void deleteMember(Long id) {
-        Member member = memberRepository.findById(id)
-                                        .orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다."));
-        member.delete();
+    @Transactional
+    public void joinMember(MemberCreateDto memberCreateDto) throws DuplicatedNicknameException {
+        validateDuplicateUsername(memberCreateDto.getUsername());
+        validateDuplicateNickname(memberCreateDto.getNickname());
+        Member newMember = MemberMapper.toEntity(memberCreateDto);
+        memberRepository.save(newMember);
     }
 
     @Override
     @Transactional
     public void updateNickName(Long id, UpdateNicknameDto updateNicknameDto) {
         Member member = memberRepository.findById(id)
-                                        .orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
         member.changeNickname(updateNicknameDto.getNewNickname());
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void updatePassword(Long id, MemberPasswordUpdateDto memberPasswordUpdateDto) {
         Member member = memberRepository.findById(id)
-                                        .orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
         String newPassword = memberPasswordUpdateDto.getNewPassword();
         member.changePassword(newPassword);
     }
 
-    private void validateDuplicateMember(String username) {
+    @Override
+    @Transactional
+    public void deleteMember(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
+        member.markAsDelete();
+    }
+
+    private void validateDuplicateUsername(String username) {
         memberRepository.findByUsername(username)
-                        .ifPresent(m -> {
-                            throw new MemberAlreadyExistsException("이미 존재하는 회원입니다.");
-                        });
+                .ifPresent(m -> {
+                    throw new MemberAlreadyExistsException(MEMBER_ALREADY_EXISTS);
+                });
     }
 
     private void validateDuplicateNickname(String nickname) {
         memberRepository.findMemberByNickname(nickname)
-                        .ifPresent(m -> {
-                            throw new DuplicateNicknameException("이미 존재하는 닉네임입니다.");
-                        });
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws AuthenticationException {
-        final Member member = memberRepository.findByUsername(username)
-                                              .orElseThrow(() -> new UsernameNotFoundException("아이디가 존재하지 않습니다."));
-        if (member.isDeleted()) {
-            throw new UsernameNotFoundException("삭제된 사용자입니다.");
-        }
-
-        return member;
+                .ifPresent(m -> {
+                    throw new DuplicatedNicknameException(MEMBER_DUPLICATED_NICKNAME);
+                });
     }
 }

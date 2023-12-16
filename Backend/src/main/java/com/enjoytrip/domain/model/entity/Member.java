@@ -80,7 +80,7 @@ public class Member implements UserDetails {
         }
     }
 
-    public void delete() {
+    public void markAsDelete() {
         this.isDeleted = true;
     }
 
