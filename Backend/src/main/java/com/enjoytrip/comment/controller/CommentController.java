@@ -20,6 +20,12 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public List<Comment> getCommentByBoardId(@PathVariable Long boardId) {
+        return commentService.getCommentByBoardId(boardId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String writeComment(@PathVariable Long boardId,
@@ -43,11 +49,5 @@ public class CommentController {
     public String deleteComment(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);
         return "댓글이 삭제되었습니다.";
-    }
-
-    @GetMapping()
-    @ResponseStatus(HttpStatus.OK)
-    public List<Comment> getCommentByBoardId(@PathVariable Long boardId) {
-        return commentService.getCommentByBoardId(boardId);
     }
 }

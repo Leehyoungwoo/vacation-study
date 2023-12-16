@@ -25,7 +25,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         return memberRepository.findByUsernameAndIsDeletedFalse(username)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
     }
@@ -38,7 +38,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public void joinMember(MemberCreateDto memberCreateDto) throws DuplicatedNicknameException {
+    public void joinMember(MemberCreateDto memberCreateDto) {
         validateDuplicateUsername(memberCreateDto.getUsername());
         validateDuplicateNickname(memberCreateDto.getNickname());
         Member newMember = MemberMapper.toEntity(memberCreateDto);
@@ -67,7 +67,7 @@ public class MemberServiceImpl implements MemberService {
     public void deleteMember(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
-        member.markAsDelete();
+        member.markAsDeleted();
     }
 
     private void validateDuplicateUsername(String username) {

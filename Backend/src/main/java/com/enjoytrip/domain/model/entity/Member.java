@@ -6,7 +6,7 @@ import com.enjoytrip.domain.model.type.Role;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -80,7 +80,7 @@ public class Member implements UserDetails {
         }
     }
 
-    public void markAsDelete() {
+    public void markAsDeleted() {
         this.isDeleted = true;
     }
 
@@ -94,7 +94,7 @@ public class Member implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority(role.name()));
+        return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
 
     }
 

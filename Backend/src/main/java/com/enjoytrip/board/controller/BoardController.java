@@ -31,12 +31,10 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @PostMapping("write")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Long writeBoard(@Valid @RequestBody BoardWriteDto boardWriteDto,
-                           @AuthenticationPrincipal Member member) {
-        boardWriteDto.setMemberId(member.getId());
-        return boardService.writeBoard(boardWriteDto);
+    @GetMapping("/{boardId}")
+    @ResponseStatus(HttpStatus.OK)
+    public BoardReadDto readBoard(@PathVariable Long boardId) {
+        return boardService.readBoard(boardId);
     }
 
     @GetMapping
@@ -45,26 +43,28 @@ public class BoardController {
         return boardService.getBoardPage(pageable);
     }
 
-    @GetMapping("/{boardId}")
-    @ResponseStatus(HttpStatus.OK)
-    public BoardReadDto readBoard(@PathVariable Long boardId) {
-        return boardService.readBoard(boardId);
+    @PostMapping("write")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Long writeBoard(@Valid @RequestBody BoardWriteDto boardWriteDto,
+                           @AuthenticationPrincipal Member member) {
+        boardWriteDto.setMemberId(member.getId());
+        return boardService.writeBoard(boardWriteDto);
     }
 
     @PutMapping("/{boardId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@authService.authorizeToUpdateBoard(#userDetails.getId(), #boardId)")
-    public String updateBoard(@PathVariable Long boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto,
+    public void updateBoard(@PathVariable Long boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto,
                               @AuthenticationPrincipal Member userDetails) {
         Long memberId = userDetails.getId();
-        return boardService.updateBoard(boardId, boardUpdateDto, memberId);
+        boardService.updateBoard(boardId, boardUpdateDto, memberId);
     }
 
     @DeleteMapping("{boardId}")
+    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@authService.authorizeToUpdateBoard(#userDetails.getId(), #boardId)")
-    public String deleteBoard(@PathVariable Long boardId, @AuthenticationPrincipal Member userDetails) {
+    public void deleteBoard(@PathVariable Long boardId, @AuthenticationPrincipal Member userDetails) {
         Long memberId = userDetails.getId();
         boardService.deleteBoard(boardId, memberId);
-        return "글이 삭제되었습니다.";
     }
 }

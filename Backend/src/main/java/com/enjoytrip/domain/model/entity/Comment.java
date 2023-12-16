@@ -25,6 +25,14 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="member_id")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="board_id")
+    private Board board;
+
     @NotNull
     @NotEmpty
     @Size(max = 200)
@@ -36,15 +44,7 @@ public class Comment {
     @Column(name="is_deleted")
     private boolean isDeleted;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="member_id")
-    private Member member;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="board_id")
-    private Board board;
-
-    public void delete() {
+    public void markAsDeleted() {
         this.isDeleted = true;
     }
 

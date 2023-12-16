@@ -25,19 +25,18 @@ public class CommentServiceImpl implements CommentService{
     private final BoardRepository boardRepository;
 
     @Override
+    public List<Comment> getCommentByBoardId(Long boardId) {
+        boardRepository.findById(boardId)
+                .orElseThrow(() -> new BoardNotFoundException("게시물이 존재하지 않습니다."));
+        return commentRepository.findByBoardIdAndIsDeletedFalse(boardId);
+    }
+
+    @Override
     @Transactional
     public void writeComment(CommentWriteDto commentWriteDto, Member member) {
         Board board = boardRepository.findById(commentWriteDto.getBoardId())
                 .orElseThrow(() -> new BoardNotFoundException("게시물이 존재하지 않습니다."));
         commentRepository.save(CommentMapper.toEntity(commentWriteDto, member, board));
-    }
-
-    @Override
-    @Transactional
-    public void deleteComment(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException("댓글이 존재하지 않습니다."));
-        comment.delete();
     }
 
     @Override
@@ -49,9 +48,10 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> getCommentByBoardId(Long boardId) {
-        boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardNotFoundException("게시물이 존재하지 않습니다."));
-        return commentRepository.findByBoardIdAndIsDeletedFalse(boardId);
+    @Transactional
+    public void deleteComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("댓글이 존재하지 않습니다."));
+        comment.markAsDeleted();
     }
 }

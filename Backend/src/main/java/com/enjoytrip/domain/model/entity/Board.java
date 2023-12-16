@@ -50,8 +50,7 @@ public class Board {
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
-
-    public void delete() {
+    public void markAsDeleted() {
         this.isDeleted = true;
     }
 

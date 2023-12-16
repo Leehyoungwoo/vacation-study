@@ -9,13 +9,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface MemberService extends UserDetailsService {
 
-    void joinMember(MemberCreateDto memberCreateDto) throws DuplicatedNicknameException;
-
     Member findMemberById(Long id);
 
-    void deleteMember(Long id);
+    void joinMember(MemberCreateDto memberCreateDto);
 
     void updateNickName(Long id, UpdateNicknameDto updateNicknameDto);
 
     void updatePassword(Long id, MemberPasswordUpdateDto memberPasswordUpdateDto);
+
+    void deleteMember(Long id);
 }
