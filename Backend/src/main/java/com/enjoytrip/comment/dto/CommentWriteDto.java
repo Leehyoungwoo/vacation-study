@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
@@ -16,6 +15,6 @@ public class CommentWriteDto {
     @Size(max = 20)
     private String content;
 
-    @NotNull
+    @Setter
     private Long boardId;
 }

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,10 @@ public class CommentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String writeComment(CommentWriteDto commentWriteDto, @AuthenticationPrincipal Member member) {
+    public String writeComment(@PathVariable Long boardId,
+                               @RequestBody @Valid CommentWriteDto commentWriteDto,
+                               @AuthenticationPrincipal Member member) {
+        commentWriteDto.setBoardId(boardId);
         commentService.writeComment(commentWriteDto, member);
         return "댓글이 작성되었습니다.";
     }

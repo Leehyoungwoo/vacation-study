@@ -3,7 +3,10 @@ package com.enjoytrip.domain.model.entity;
 import com.enjoytrip.domain.exception.InvalidEmailFormatException;
 import com.enjoytrip.domain.model.entity.converter.PasswordConverter;
 import com.enjoytrip.domain.model.type.Role;
+
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -17,12 +20,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
@@ -89,7 +94,8 @@ public class Member implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Arrays.asList(new SimpleGrantedAuthority(role.name()));
+
     }
 
     @Override

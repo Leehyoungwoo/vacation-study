@@ -1,6 +1,6 @@
 package com.enjoytrip.jwt;
 
-import com.enjoytrip.security.CustomUserDetails;
+import com.enjoytrip.domain.model.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -54,7 +54,7 @@ public class JwtProvider {
                                            .map(GrantedAuthority::getAuthority)
                                            .collect(Collectors.joining(","));
 
-        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+        Member principal = (Member) authentication.getPrincipal();
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 

@@ -4,8 +4,9 @@ import com.enjoytrip.board.dto.BoardReadDto;
 import com.enjoytrip.board.dto.BoardUpdateDto;
 import com.enjoytrip.board.dto.BoardWriteDto;
 import com.enjoytrip.board.service.BoardService;
-import com.enjoytrip.security.CustomUserDetails;
 import javax.validation.Valid;
+
+import com.enjoytrip.domain.model.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,8 +34,8 @@ public class BoardController {
     @PostMapping("write")
     @ResponseStatus(HttpStatus.CREATED)
     public Long writeBoard(@Valid @RequestBody BoardWriteDto boardWriteDto,
-                           @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        boardWriteDto.setMemberId(customUserDetails.getId());
+                           @AuthenticationPrincipal Member member) {
+        boardWriteDto.setMemberId(member.getId());
         return boardService.writeBoard(boardWriteDto);
     }
 
@@ -54,14 +55,14 @@ public class BoardController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@authService.authorizeToUpdateBoard(#userDetails.getId(), #boardId)")
     public String updateBoard(@PathVariable Long boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto,
-                              @AuthenticationPrincipal CustomUserDetails userDetails) {
+                              @AuthenticationPrincipal Member userDetails) {
         Long memberId = userDetails.getId();
         return boardService.updateBoard(boardId, boardUpdateDto, memberId);
     }
 
     @DeleteMapping("{boardId}")
     @PreAuthorize("@authService.authorizeToUpdateBoard(#userDetails.getId(), #boardId)")
-    public String deleteBoard(@PathVariable Long boardId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public String deleteBoard(@PathVariable Long boardId, @AuthenticationPrincipal Member userDetails) {
         Long memberId = userDetails.getId();
         boardService.deleteBoard(boardId, memberId);
         return "글이 삭제되었습니다.";
