@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.enjoytrip.domain.exception.ExceptionMessage.BOARD_NOT_FOUND;
 import static com.enjoytrip.domain.exception.ExceptionMessage.MEMBER_NOT_FOUND;
 
 
@@ -30,7 +31,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardReadDto readBoard(Long boardId) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardNotFoundException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
         return new BoardReadDto(board);
     }
 
@@ -53,7 +54,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public void updateBoard(Long boardId, BoardUpdateDto updateDto, Long memberId) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardNotFoundException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
         board.update(updateDto);
     }
 
@@ -61,7 +62,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public void deleteBoard(Long boardId, Long memberId) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardNotFoundException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
         board.markAsDeleted();
     }
 }
