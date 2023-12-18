@@ -25,6 +25,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
+        System.out.println("로드메서드 사용하나?");
         return memberRepository.findByUsernameAndIsDeletedFalse(username)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
     }

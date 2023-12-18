@@ -49,4 +49,9 @@ public class ExceptionAdvice {
     public ResponseEntity<String> handleCommentNotFoundException(CommentNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+//
+//    @ExceptionHandler(BoardLikeNotFoundException.class)
+//    public ResponseEntity<String> handleBoardLikeNotFoundException(BoardLikeNotFoundException e) {
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//    }
 }

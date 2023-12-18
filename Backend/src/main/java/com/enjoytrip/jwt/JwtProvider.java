@@ -78,8 +78,8 @@ public class JwtProvider {
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toCollection(ArrayList::new));
-        Long id = Long.parseLong(getUserIdFromToken(token).toString());
-        String nickname = getNicknameFromToken(token).toString();
+        Long id = Long.parseLong(getUserIdFromToken(token));
+        String nickname = getNicknameFromToken(token);
         String authority = getAuthorities(token).get(0).getAuthority();
         Member principal = new Member(id, "", "", "", nickname, Role.valueOf(authority), false);
 
@@ -101,7 +101,6 @@ public class JwtProvider {
 
     public List<GrantedAuthority> getAuthorities(String token) {
         Claims claims = parseClaims(token);
-
         String[] authorities = claims.get("authorities", String.class)
                 .split(",");
 
@@ -127,7 +126,8 @@ public class JwtProvider {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.replace("Bearer ", "");
         }
-        throw new MissingTokenException(TOKEN_NOT_FOUND);
+
+        return bearerToken;
     }
 
     public boolean validateToken(String token) {
@@ -143,6 +143,7 @@ public class JwtProvider {
         } catch (IllegalArgumentException e) {
             System.out.println("JWT 토큰이 비어있습니다.");
         }
+
         return false;
     }
 }
