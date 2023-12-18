@@ -4,7 +4,6 @@ import com.enjoytrip.domain.exception.InvalidEmailFormatException;
 import com.enjoytrip.domain.model.entity.converter.PasswordConverter;
 import com.enjoytrip.domain.model.type.Role;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import javax.persistence.Column;

@@ -1,6 +1,5 @@
 package com.enjoytrip.member.controller;
 
-import com.enjoytrip.auth.AuthService;
 import com.enjoytrip.domain.model.entity.Member;
 import com.enjoytrip.member.dto.MemberCreateDto;
 import com.enjoytrip.member.dto.MemberInfoDto;
@@ -11,7 +10,6 @@ import com.enjoytrip.member.service.MemberService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final AuthService authService;
     private final MemberService memberService;
 
     @GetMapping("/info")
