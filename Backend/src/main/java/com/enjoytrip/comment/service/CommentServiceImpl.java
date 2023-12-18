@@ -7,7 +7,6 @@ import com.enjoytrip.comment.mapper.CommentMapper;
 import com.enjoytrip.comment.repository.CommentRepository;
 import com.enjoytrip.domain.exception.BoardNotFoundException;
 import com.enjoytrip.domain.exception.CommentNotFoundException;
-import com.enjoytrip.domain.exception.ExceptionMessage;
 import com.enjoytrip.domain.model.entity.Board;
 import com.enjoytrip.domain.model.entity.Comment;
 import com.enjoytrip.domain.model.entity.Member;
@@ -18,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.enjoytrip.domain.exception.ExceptionMessage.BOARD_NOT_FOUND;
+import static com.enjoytrip.domain.exception.ExceptionMessage.COMMENT_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +46,7 @@ public class CommentServiceImpl implements CommentService{
     @Transactional
     public void updateComment(UpdateCommentDto updateCommentDto) {
         Comment comment = commentRepository.findById(updateCommentDto.getId())
-                .orElseThrow(() -> new CommentNotFoundException("댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
         comment.updateComments(updateCommentDto);
     }
 
@@ -54,7 +54,7 @@ public class CommentServiceImpl implements CommentService{
     @Transactional
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException("댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
         comment.markAsDeleted();
     }
 }

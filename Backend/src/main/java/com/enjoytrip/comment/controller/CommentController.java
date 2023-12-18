@@ -7,6 +7,7 @@ import com.enjoytrip.domain.model.entity.Comment;
 import com.enjoytrip.domain.model.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,26 +29,28 @@ public class CommentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String writeComment(@PathVariable Long boardId,
+    public void writeComment(@PathVariable Long boardId,
                                @RequestBody @Valid CommentWriteDto commentWriteDto,
                                @AuthenticationPrincipal Member member) {
         commentWriteDto.setBoardId(boardId);
         commentService.writeComment(commentWriteDto, member);
-        return "댓글이 작성되었습니다.";
     }
 
     @PutMapping("/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public String updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentDto updateCommentDto) {
+    @PreAuthorize("@authService.authorizeToUpdateComment(#userDetails.getId(), #commentId)")
+    public void updateComment(@PathVariable Long commentId,
+                              @RequestBody UpdateCommentDto updateCommentDto,
+                              @AuthenticationPrincipal Member userDetails) {
         updateCommentDto.setId(commentId);
         commentService.updateComment(updateCommentDto);
-        return "댓글이 수정되었습니다.";
     }
 
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteComment(@PathVariable Long commentId) {
+    @PreAuthorize("@authService.authorizeToUpdateComment(#userDetails.getId(), #commentId)")
+    public void deleteComment(@PathVariable Long commentId,
+                              @AuthenticationPrincipal Member userDetails) {
         commentService.deleteComment(commentId);
-        return "댓글이 삭제되었습니다.";
     }
 }

@@ -15,6 +15,11 @@ public class ExceptionAdvice {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<String> handleMemberNotFoundException(MemberNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
     @ExceptionHandler(MemberAlreadyExistsException.class)
     public ResponseEntity<String> handleMemberAlreadyExistsException(MemberAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -27,7 +32,7 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(BoardNotFoundException.class)
     public ResponseEntity<String> handleBoardNotFoundException(BoardNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
     @ExceptionHandler(AccessDeniedException.class)

@@ -8,11 +8,11 @@ import com.enjoytrip.domain.model.entity.Member;
 import java.util.List;
 
 public interface CommentService {
+    List<Comment> getCommentByBoardId(Long boardId);
+
     void writeComment(CommentWriteDto commentWriteDto, Member member);
 
     void deleteComment(Long commentId);
 
     void updateComment(UpdateCommentDto updateCommentDto);
-
-    List<Comment> getCommentByBoardId(Long boardId);
 }
