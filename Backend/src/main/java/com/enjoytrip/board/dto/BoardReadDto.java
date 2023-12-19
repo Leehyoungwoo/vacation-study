@@ -1,6 +1,8 @@
 package com.enjoytrip.board.dto;
 
 import com.enjoytrip.domain.model.entity.Board;
+
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,14 +15,14 @@ public class BoardReadDto {
 
     private String content;
 
-    private LocalDateTime currentTime;
+    private Timestamp currentTime;
 
     private String author;
 
     public BoardReadDto(Board board) {
         this.title = board.getTitle();
         this.content = board.getContent();
-        this.currentTime = board.getCurrentTime().toLocalDateTime();
+        this.currentTime = board.getCurrentTime();
         this.author = board.getMember().getName();
     }
 

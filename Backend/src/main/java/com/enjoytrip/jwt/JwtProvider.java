@@ -2,7 +2,6 @@ package com.enjoytrip.jwt;
 
 import com.enjoytrip.domain.model.entity.Member;
 import com.enjoytrip.domain.model.type.Role;
-import com.enjoytrip.jwt.exception.MissingTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -26,7 +25,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import static com.enjoytrip.domain.exception.ExceptionMessage.TOKEN_NOT_FOUND;
 
 @Component
 public class JwtProvider {
@@ -71,36 +69,53 @@ public class JwtProvider {
                 .compact();
     }
 
-    public Authentication getAuthentication(String token) {
-        Claims claims = parseClaims(token);
-
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toCollection(ArrayList::new));
-        Long id = Long.parseLong(getUserIdFromToken(token));
-        String nickname = getNicknameFromToken(token);
-        String authority = getAuthorities(token).get(0).getAuthority();
-        Member principal = new Member(id, "", "", "", nickname, Role.valueOf(authority), false);
-
-
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
-    }
+//    public Authentication getAuthentication(String token) {
+//        Claims claims = Jwts.parserBuilder()
+//                .setSigningKey(key)
+//                .build()
+//                .parseClaimsJws(token)
+//                .getBody();
+//
+//        Collection<? extends GrantedAuthority> authorities =
+//                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+//                        .map(SimpleGrantedAuthority::new)
+//                        .collect(Collectors.toCollection(ArrayList::new));
+//        Long id = Long.parseLong(claims.get("id").toString());
+//        String nickname = claims.get("nickname").toString();
+//        String authority = authorities
+//        Member principal = new Member(id, "", "", "", nickname, Role.valueOf(authority), false);
+//
+//
+//        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+//    }
 
     public String getNicknameFromToken(String token) {
-        return parseClaims(token)
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
                 .get("nickname")
                 .toString();
     }
 
     public String getUserIdFromToken(String token) {
-        return parseClaims(token)
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
                 .get("id")
                 .toString();
     }
 
     public List<GrantedAuthority> getAuthorities(String token) {
-        Claims claims = parseClaims(token);
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
         String[] authorities = claims.get("authorities", String.class)
                 .split(",");
 
@@ -109,16 +124,8 @@ public class JwtProvider {
         }
 
         return Arrays.stream(authorities)
-                .map(SimpleGrantedAuthority::new)
+                .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority))
                 .collect(Collectors.toList());
-    }
-
-    private Claims parseClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
     }
 
     public String resolveToken(HttpServletRequest request) {
@@ -127,12 +134,15 @@ public class JwtProvider {
             return bearerToken.replace("Bearer ", "");
         }
 
-        return bearerToken;
+        return null;
     }
 
     public boolean validateToken(String token) {
         try {
-            parseClaims(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             System.out.println("잘못된 JWT 서명입니다.");
@@ -143,7 +153,6 @@ public class JwtProvider {
         } catch (IllegalArgumentException e) {
             System.out.println("JWT 토큰이 비어있습니다.");
         }
-
         return false;
     }
 }
