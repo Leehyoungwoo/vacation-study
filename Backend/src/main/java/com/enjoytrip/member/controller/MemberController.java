@@ -47,7 +47,7 @@ public class MemberController {
     public void updateNickname(@AuthenticationPrincipal Member principal,
                                @RequestBody @Valid UpdateNicknameDto updateNicknameDto) {
         Long id = principal.getId();
-        memberService.updateNickName(id, updateNicknameDto);
+        memberService.updateNickName(id, updateNicknameDto.getNewNickname());
     }
 
     @PutMapping("/password")
@@ -56,7 +56,7 @@ public class MemberController {
     public void updatePassword(@AuthenticationPrincipal Member principal,
                                @RequestBody @Valid MemberPasswordUpdateDto memberPasswordUpdateDto) {
         Long id = principal.getId();
-        memberService.updatePassword(id, memberPasswordUpdateDto);
+        memberService.updatePassword(id, memberPasswordUpdateDto.getNewPassword());
     }
 
     @DeleteMapping("/delete")

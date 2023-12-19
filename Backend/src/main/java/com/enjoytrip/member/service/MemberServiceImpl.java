@@ -29,7 +29,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member findMemberById(Long id) {
-        return memberRepository.findById(id)
+        return memberRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
     }
 
@@ -47,18 +47,17 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public void updateNickName(Long id, UpdateNicknameDto updateNicknameDto) {
+    public void updateNickName(Long id, String newNickname) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
-        member.changeNickname(updateNicknameDto.getNewNickname());
+        member.changeNickname(newNickname);
     }
 
     @Override
     @Transactional
-    public void updatePassword(Long id, MemberPasswordUpdateDto memberPasswordUpdateDto) {
+    public void updatePassword(Long id, String newPassword) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
-        String newPassword = memberPasswordUpdateDto.getNewPassword();
         member.changePassword(newPassword);
     }
 
