@@ -67,7 +67,6 @@ public class BoardLikeServiceImpl implements BoardLikeService {
                                 .build()
                 ));
 
-        System.out.println(boardLike);
         boardLike.like();
     }
 

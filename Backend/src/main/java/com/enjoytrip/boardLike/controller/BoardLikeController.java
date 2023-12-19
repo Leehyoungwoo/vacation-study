@@ -25,11 +25,11 @@ public class BoardLikeController {
     @ResponseStatus(HttpStatus.OK)
     public boolean checkLikeStatus(@PathVariable Long boardId, @AuthenticationPrincipal Member userDetails) {
         Long memberId = userDetails.getId();
-        BoardLikeRequestDto boardLikeId = BoardLikeRequestDto.builder()
+        BoardLikeRequestDto requestDto = BoardLikeRequestDto.builder()
                 .memberId(memberId)
                 .boardId(boardId)
                 .build();
-        return boardLikeService.checkLikeStatus(boardLikeId);
+        return boardLikeService.checkLikeStatus(requestDto);
     }
 
     @PostMapping("/like")

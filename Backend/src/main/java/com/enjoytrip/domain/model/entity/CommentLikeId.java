@@ -8,16 +8,15 @@ import java.io.Serializable;
 
 @Getter
 @Builder
-@ToString
 @Embeddable
 @NoArgsConstructor
 @EqualsAndHashCode
 @AllArgsConstructor
-public class BoardLikeId implements Serializable {
+public class CommentLikeId implements Serializable {
 
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(name = "board_id")
-    private Long boardId;
+    @Column(name = "comment_id")
+    private Long commentId;
 }

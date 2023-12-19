@@ -1,7 +1,6 @@
 package com.enjoytrip.boardLike.service;
 
 import com.enjoytrip.boardLike.dto.BoardLikeRequestDto;
-import com.enjoytrip.domain.model.entity.BoardLikeId;
 
 public interface BoardLikeService {
 
