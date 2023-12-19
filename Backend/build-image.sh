@@ -1,0 +1,1 @@
+docker build -t vacation-study -f ./deploy/Dockerfile .
