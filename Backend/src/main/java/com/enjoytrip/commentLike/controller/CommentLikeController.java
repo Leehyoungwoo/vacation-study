@@ -15,10 +15,21 @@ public class CommentLikeController {
 
     private final CommentLikeService commentLikeService;
 
-    @GetMapping("/likes/count")
+    @GetMapping("/likes")
     @ResponseStatus(HttpStatus.OK)
     public Integer getLikeCount(@PathVariable Long commentId) {
         return commentLikeService.getLikeCount(commentId);
+    }
+
+    @GetMapping("/likeStatus")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean checkLikeStatus(@PathVariable Long commentId, @AuthenticationPrincipal Member userDetails) {
+        Long memberId = userDetails.getId();
+        CommentLikeRequstDto requstDto = CommentLikeRequstDto.builder()
+                .memberId(memberId)
+                .commentId(commentId)
+                .build();
+        return commentLikeService.checkLikeStatus(requstDto);
     }
 
     @PostMapping("/like")

@@ -5,7 +5,6 @@ import com.enjoytrip.commentLike.dto.CommentLikeRequstDto;
 import com.enjoytrip.commentLike.repository.CommentLikeRepository;
 import com.enjoytrip.domain.exception.CommentLikeNotFoundException;
 import com.enjoytrip.domain.exception.CommentNotFoundException;
-import com.enjoytrip.domain.exception.ExceptionMessage;
 import com.enjoytrip.domain.exception.MemberNotFoundException;
 import com.enjoytrip.domain.model.entity.Comment;
 import com.enjoytrip.domain.model.entity.CommentLike;
@@ -26,6 +25,18 @@ public class CommentLikeServiceImpl implements CommentLikeService{
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
+
+    @Override
+    public boolean checkLikeStatus(CommentLikeRequstDto requstDto) {
+        CommentLikeId commentLikeId = CommentLikeId.builder()
+                .memberId(requstDto.getMemberId())
+                .commentId(requstDto.getCommentId())
+                .build();
+
+        return commentLikeRepository.findById(commentLikeId)
+                .map(CommentLike::isLiked)
+                .orElse(false);
+    }
 
     @Override
     public Integer getLikeCount(Long commentId) {

@@ -15,7 +15,7 @@ public class BoardLikeController {
 
     private final BoardLikeService boardLikeService;
 
-    @GetMapping("/likes/count")
+    @GetMapping("/likes")
     @ResponseStatus(HttpStatus.OK)
     public Integer getLikeCount(@PathVariable Long boardId) {
         return boardLikeService.getLikeCount(boardId);
