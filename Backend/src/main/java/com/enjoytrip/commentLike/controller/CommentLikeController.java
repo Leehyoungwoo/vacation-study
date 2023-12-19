@@ -15,6 +15,12 @@ public class CommentLikeController {
 
     private final CommentLikeService commentLikeService;
 
+    @GetMapping("/likes/count")
+    @ResponseStatus(HttpStatus.OK)
+    public Integer getLikeCount(@PathVariable Long commentId) {
+        return commentLikeService.getLikeCount(commentId);
+    }
+
     @PostMapping("/like")
     @ResponseStatus(HttpStatus.OK)
     public void likeComment(@PathVariable Long commentId, @AuthenticationPrincipal Member userDetails) {

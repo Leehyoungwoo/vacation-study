@@ -28,6 +28,13 @@ public class CommentLikeServiceImpl implements CommentLikeService{
     private final CommentLikeRepository commentLikeRepository;
 
     @Override
+    public Integer getLikeCount(Long commentId) {
+        commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
+        return commentLikeRepository.countByCommentId(commentId);
+    }
+
+    @Override
     @Transactional
     public void likeComment(CommentLikeRequstDto requestDto) {
         Member member = memberRepository.findById(requestDto.getMemberId())

@@ -13,5 +13,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("select c from Comment c where c.id = :id and c.isDeleted=false")
     Optional<Comment> findById(Long id);
 
-    List<Comment> findByBoardIdAndIsDeletedFalse(Long boardId);
+    List<Comment> findByBoardIdAndIsDeletedFalse(Long commentId);
 }
