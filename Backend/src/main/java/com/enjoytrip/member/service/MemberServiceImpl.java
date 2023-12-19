@@ -37,6 +37,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public String getNicknameByMember(Member member) {
+        return member.getNickname();
+    }
+
+    @Override
     @Transactional
     public void joinMember(MemberCreateDto memberCreateDto) {
         validateDuplicateUsername(memberCreateDto.getUsername());

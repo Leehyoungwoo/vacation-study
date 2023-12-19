@@ -1,6 +1,5 @@
 package com.enjoytrip.member.service;
 
-import com.enjoytrip.domain.exception.DuplicatedNicknameException;
 import com.enjoytrip.domain.model.entity.Member;
 import com.enjoytrip.member.dto.MemberCreateDto;
 import com.enjoytrip.member.dto.MemberPasswordUpdateDto;
@@ -11,6 +10,8 @@ public interface MemberService extends UserDetailsService {
 
     Member findMemberById(Long id);
 
+    String getNicknameByMember(Member member);
+
     void joinMember(MemberCreateDto memberCreateDto);
 
     void updateNickName(Long id, UpdateNicknameDto updateNicknameDto);
@@ -18,4 +19,5 @@ public interface MemberService extends UserDetailsService {
     void updatePassword(Long id, MemberPasswordUpdateDto memberPasswordUpdateDto);
 
     void deleteMember(Long id);
+
 }
