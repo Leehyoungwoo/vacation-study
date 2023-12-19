@@ -53,18 +53,18 @@ public class BoardController {
 
     @PutMapping("/{boardId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("@authService.authorizeToUpdateBoard(#userDetails.getId(), #boardId)")
+    @PreAuthorize("@authService.authorizeToUpdateBoard(#boardId, #member)")
     public void updateBoard(@PathVariable Long boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto,
-                              @AuthenticationPrincipal Member userDetails) {
-        Long memberId = userDetails.getId();
+                              @AuthenticationPrincipal Member member) {
+        Long memberId = member.getId();
         boardService.updateBoard(boardId, boardUpdateDto, memberId);
     }
 
     @DeleteMapping("{boardId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("@authService.authorizeToUpdateBoard(#userDetails.getId(), #boardId)")
-    public void deleteBoard(@PathVariable Long boardId, @AuthenticationPrincipal Member userDetails) {
-        Long memberId = userDetails.getId();
+    @PreAuthorize("@authService.authorizeToUpdateBoard(#boardId, #member)")
+    public void deleteBoard(@PathVariable Long boardId, @AuthenticationPrincipal Member member) {
+        Long memberId = member.getId();
         boardService.deleteBoard(boardId, memberId);
     }
 }

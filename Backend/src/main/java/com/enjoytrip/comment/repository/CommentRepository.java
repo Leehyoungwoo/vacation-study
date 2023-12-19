@@ -1,6 +1,7 @@
 package com.enjoytrip.comment.repository;
 
 import com.enjoytrip.domain.model.entity.Comment;
+import com.enjoytrip.domain.model.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Optional<Comment> findById(Long id);
 
     List<Comment> findByBoardIdAndIsDeletedFalse(Long commentId);
+
+    Optional<Comment> findByIdAndMemberAndIsDeletedFalse(Long commentId, Member member);
 }

@@ -46,19 +46,19 @@ public class CommentController {
 
     @PutMapping("/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("@authService.authorizeToUpdateComment(#userDetails.getId(), #commentId)")
+    @PreAuthorize("@authService.authorizeToUpdateComment(#commentId, #member)")
     public void updateComment(@PathVariable Long commentId,
                               @RequestBody UpdateCommentDto updateCommentDto,
-                              @AuthenticationPrincipal Member userDetails) {
+                              @AuthenticationPrincipal Member member) {
         updateCommentDto.setId(commentId);
         commentService.updateComment(updateCommentDto);
     }
 
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("@authService.authorizeToUpdateComment(#userDetails.getId(), #commentId)")
+    @PreAuthorize("@authService.authorizeToUpdateComment(#commentId, #member)")
     public void deleteComment(@PathVariable Long commentId,
-                              @AuthenticationPrincipal Member userDetails) {
+                              @AuthenticationPrincipal Member member) {
         commentService.deleteComment(commentId);
     }
 }
