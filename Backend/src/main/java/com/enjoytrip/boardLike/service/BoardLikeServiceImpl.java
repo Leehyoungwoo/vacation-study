@@ -2,6 +2,7 @@ package com.enjoytrip.boardLike.service;
 
 import com.enjoytrip.board.repository.BoardRepository;
 import com.enjoytrip.boardLike.dto.BoardLikeRequestDto;
+import com.enjoytrip.boardLike.mapper.BoardLikeMapper;
 import com.enjoytrip.boardLike.repository.BoardLikeRepository;
 import com.enjoytrip.domain.exception.BoardLikeNotFoundException;
 import com.enjoytrip.domain.exception.BoardNotFoundException;
@@ -34,10 +35,7 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     @Override
     @Transactional
     public boolean checkLikeStatus(BoardLikeRequestDto requestDto) {
-        BoardLikeId boardLikeId = BoardLikeId.builder()
-                .memberId(requestDto.getMemberId())
-                .boardId(requestDto.getMemberId())
-                .build();
+        BoardLikeId boardLikeId = BoardLikeMapper.toBoardLikeId(requestDto);
 
         return boardLikeRepository.findById(boardLikeId)
                 .map(BoardLike::isLiked)
@@ -53,10 +51,7 @@ public class BoardLikeServiceImpl implements BoardLikeService {
         Board board = boardRepository.findById(requestDto.getBoardId())
                 .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
 
-        BoardLikeId boardLikeId = BoardLikeId.builder()
-                .memberId(requestDto.getMemberId())
-                .boardId(requestDto.getMemberId())
-                .build();
+        BoardLikeId boardLikeId = BoardLikeMapper.toBoardLikeId(requestDto);
         BoardLike boardLike = boardLikeRepository.findById(boardLikeId)
                 .orElseGet(() -> boardLikeRepository.save(
                         BoardLike.builder()
@@ -73,10 +68,7 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     @Override
     @Transactional
     public void unlikeBoard(BoardLikeRequestDto requestDto) {
-        BoardLikeId boardLikeId = BoardLikeId.builder()
-                .memberId(requestDto.getMemberId())
-                .boardId(requestDto.getBoardId())
-                .build();
+        BoardLikeId boardLikeId = BoardLikeMapper.toBoardLikeId(requestDto);
         BoardLike boardLike = boardLikeRepository.findById(boardLikeId)
                 .orElseThrow(() -> new BoardLikeNotFoundException(BOARDLIKE_NOT_FOUND));
 
