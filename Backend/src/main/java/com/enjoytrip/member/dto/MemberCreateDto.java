@@ -1,6 +1,8 @@
 package com.enjoytrip.member.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,11 +11,19 @@ import lombok.Getter;
 public class MemberCreateDto {
 
     @NotBlank
+    @Size(min = 6, max = 30)
+    @JsonProperty("email")
     private final String username;
+
     @NotBlank
+    @Size(min = 6, max = 15)
+    private final String password;
+
+    @NotBlank
+    @Size(max = 20)
     private final String name;
+
     @NotBlank
+    @Size(max = 10)
     private final String nickname;
-    @NotBlank
-    private String password;
 }
