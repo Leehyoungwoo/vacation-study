@@ -19,5 +19,4 @@ public interface MemberService extends UserDetailsService {
     void updatePassword(Long id, MemberPasswordUpdateDto memberPasswordUpdateDto);
 
     void deleteMember(Long id);
-
 }

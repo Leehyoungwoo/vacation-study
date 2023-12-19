@@ -1,5 +1,6 @@
 package com.enjoytrip.domain.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionAdvice {
 
-    @ExceptionHandler({ MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidEmailFormatException.class })
+    @ExceptionHandler({ MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidEmailFormatException.class, DataIntegrityViolationException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleBadRequest(Exception e) {
         return e.getMessage();
