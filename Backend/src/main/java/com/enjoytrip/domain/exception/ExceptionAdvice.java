@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class ExceptionAdvice {
 
-    @ExceptionHandler({ MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidEmailFormatException.class, DataIntegrityViolationException.class })
+    @ExceptionHandler({ MethodArgumentNotValidException.class, HttpMessageNotReadableException.class,
+                        InvalidEmailFormatException.class, DataIntegrityViolationException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleBadRequest(Exception e) {
         return e.getMessage();
@@ -33,7 +34,8 @@ public class ExceptionAdvice {
         return e.getMessage();
     }
 
-    @ExceptionHandler({ MemberNotFoundException.class, BoardNotFoundException.class, CommentNotFoundException.class, BoardLikeNotFoundException.class, CommentLikeNotFoundException.class })
+    @ExceptionHandler({ MemberNotFoundException.class, BoardNotFoundException.class, CommentNotFoundException.class,
+                        BoardLikeNotFoundException.class, CommentLikeNotFoundException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNotFound(MemberNotFoundException e) {
         return e.getMessage();

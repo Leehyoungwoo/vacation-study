@@ -4,9 +4,8 @@ import com.enjoytrip.board.dto.BoardReadDto;
 import com.enjoytrip.board.dto.BoardUpdateDto;
 import com.enjoytrip.board.dto.BoardWriteDto;
 import com.enjoytrip.board.service.BoardService;
-import javax.validation.Valid;
-
 import com.enjoytrip.domain.model.entity.Member;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,7 +54,7 @@ public class BoardController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@authService.authorizeToUpdateBoard(#boardId, #member)")
     public void updateBoard(@PathVariable Long boardId, @Valid @RequestBody BoardUpdateDto boardUpdateDto,
-                              @AuthenticationPrincipal Member member) {
+                            @AuthenticationPrincipal Member member) {
         Long memberId = member.getId();
         boardService.updateBoard(boardId, boardUpdateDto, memberId);
     }

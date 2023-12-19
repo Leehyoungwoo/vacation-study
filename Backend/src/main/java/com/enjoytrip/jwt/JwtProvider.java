@@ -1,7 +1,6 @@
 package com.enjoytrip.jwt;
 
 import com.enjoytrip.domain.model.entity.Member;
-import com.enjoytrip.domain.model.type.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -10,15 +9,15 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-
 import java.security.Key;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -53,20 +52,20 @@ public class JwtProvider {
 
     public String createToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+                                           .map(GrantedAuthority::getAuthority)
+                                           .collect(Collectors.joining(","));
 
         Member principal = (Member) authentication.getPrincipal();
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
         return Jwts.builder()
-                .claim(AUTHORITIES_KEY, authorities)
-                .claim("id", principal.getId())
-                .claim("nickname", principal.getNickname())
-                .signWith(key, SignatureAlgorithm.HS256)
-                .setExpiration(validity)
-                .compact();
+                   .claim(AUTHORITIES_KEY, authorities)
+                   .claim("id", principal.getId())
+                   .claim("nickname", principal.getNickname())
+                   .signWith(key, SignatureAlgorithm.HS256)
+                   .setExpiration(validity)
+                   .compact();
     }
 
 //    public Authentication getAuthentication(String token) {
@@ -91,41 +90,41 @@ public class JwtProvider {
 
     public String getNicknameFromToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("nickname")
-                .toString();
+                   .setSigningKey(key)
+                   .build()
+                   .parseClaimsJws(token)
+                   .getBody()
+                   .get("nickname")
+                   .toString();
     }
 
     public String getUserIdFromToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("id")
-                .toString();
+                   .setSigningKey(key)
+                   .build()
+                   .parseClaimsJws(token)
+                   .getBody()
+                   .get("id")
+                   .toString();
     }
 
     public List<GrantedAuthority> getAuthorities(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+                            .setSigningKey(key)
+                            .build()
+                            .parseClaimsJws(token)
+                            .getBody();
 
         String[] authorities = claims.get("authorities", String.class)
-                .split(",");
+                                     .split(",");
 
         if (!StringUtils.hasText(authorities[0])) {
             return Collections.emptyList();
         }
 
         return Arrays.stream(authorities)
-                .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority))
-                .collect(Collectors.toList());
+                     .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority))
+                     .collect(Collectors.toList());
     }
 
     public String resolveToken(HttpServletRequest request) {
@@ -140,9 +139,9 @@ public class JwtProvider {
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             System.out.println("잘못된 JWT 서명입니다.");

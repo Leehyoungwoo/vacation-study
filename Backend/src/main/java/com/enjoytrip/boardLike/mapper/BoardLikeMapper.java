@@ -10,8 +10,8 @@ public class BoardLikeMapper {
 
     public static BoardLikeId toBoardLikeId(BoardLikeRequestDto requestDto) {
         return BoardLikeId.builder()
-                .memberId(requestDto.getMemberId())
-                .boardId(requestDto.getBoardId())
-                .build();
+                          .memberId(requestDto.getMemberId())
+                          .boardId(requestDto.getBoardId())
+                          .build();
     }
 }

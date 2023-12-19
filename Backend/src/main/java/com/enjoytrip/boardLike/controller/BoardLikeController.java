@@ -6,7 +6,13 @@ import com.enjoytrip.domain.model.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/board/{boardId}")
@@ -26,9 +32,9 @@ public class BoardLikeController {
     public boolean checkLikeStatus(@PathVariable Long boardId, @AuthenticationPrincipal Member userDetails) {
         Long memberId = userDetails.getId();
         BoardLikeRequestDto requestDto = BoardLikeRequestDto.builder()
-                .memberId(memberId)
-                .boardId(boardId)
-                .build();
+                                                            .memberId(memberId)
+                                                            .boardId(boardId)
+                                                            .build();
         return boardLikeService.checkLikeStatus(requestDto);
     }
 
@@ -37,9 +43,9 @@ public class BoardLikeController {
     public void likeBoard(@PathVariable Long boardId, @AuthenticationPrincipal Member userDetails) {
         Long memberId = userDetails.getId();
         BoardLikeRequestDto requestDto = BoardLikeRequestDto.builder()
-                .memberId(memberId)
-                .boardId(boardId)
-                .build();
+                                                            .memberId(memberId)
+                                                            .boardId(boardId)
+                                                            .build();
         boardLikeService.likeBoard(requestDto);
     }
 
@@ -48,9 +54,9 @@ public class BoardLikeController {
     public void unlikeBaord(@PathVariable Long boardId, @AuthenticationPrincipal Member userDetails) {
         Long memberId = userDetails.getId();
         BoardLikeRequestDto requestDto = BoardLikeRequestDto.builder()
-                .memberId(memberId)
-                .boardId(boardId)
-                .build();
+                                                            .memberId(memberId)
+                                                            .boardId(boardId)
+                                                            .build();
         boardLikeService.unlikeBoard(requestDto);
     }
 }

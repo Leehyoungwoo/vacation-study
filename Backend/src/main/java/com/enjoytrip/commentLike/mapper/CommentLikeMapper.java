@@ -10,8 +10,8 @@ public class CommentLikeMapper {
 
     public static CommentLikeId toCommentLikeId(CommentLikeRequstDto requstDto) {
         return CommentLikeId.builder()
-                .memberId(requstDto.getMemberId())
-                .commentId(requstDto.getCommentId())
-                .build();
+                            .memberId(requstDto.getMemberId())
+                            .commentId(requstDto.getCommentId())
+                            .build();
     }
 }

@@ -12,10 +12,10 @@ public final class CommentMapper {
 
     public static Comment toEntity(CommentWriteDto commentWriteDto, Member member, Board board) {
         return Comment.builder()
-                .content(commentWriteDto.getContent())
-                .isDeleted(false)
-                .member(member)
-                .board(board)
-                .build();
+                      .content(commentWriteDto.getContent())
+                      .isDeleted(false)
+                      .member(member)
+                      .board(board)
+                      .build();
     }
 }

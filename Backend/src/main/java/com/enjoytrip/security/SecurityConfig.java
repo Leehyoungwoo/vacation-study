@@ -30,30 +30,30 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-             .csrf().disable()
-             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-             .and()
-             .authorizeRequests(
-                     registry -> registry.antMatchers("/admin/**").hasRole("ADMIN")
-                                         .antMatchers("/board/**").hasRole("USER")
-                                         .antMatchers("/member/info").hasAnyRole("USER", "ADMIN")
-                                         .antMatchers("/member/signup/**").permitAll()
-                                         .anyRequest().authenticated()
-             )
-             .formLogin(
-                     configurer -> configurer.successHandler(new FormLoginAuthenticationSuccessHandler(jwtProvider))
-                                             .failureHandler(new FormLoginAuthenticationFailureHandler())
-                                             .loginProcessingUrl("/member/login")
-                                             .usernameParameter("email")
-             )
-             .exceptionHandling(
-                     configurer -> configurer.accessDeniedHandler(new JwtAccessDeniedHandler())
-                                             .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-             )
-             .addFilterBefore(
-                     new JwtAuthenticationFilter(jwtProvider),
-                     UsernamePasswordAuthenticationFilter.class
-             );
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests(
+                        registry -> registry.antMatchers("/admin/**").hasRole("ADMIN")
+                                            .antMatchers("/board/**").hasRole("USER")
+                                            .antMatchers("/member/info").hasAnyRole("USER", "ADMIN")
+                                            .antMatchers("/member/signup/**").permitAll()
+                                            .anyRequest().authenticated()
+                )
+                .formLogin(
+                        configurer -> configurer.successHandler(new FormLoginAuthenticationSuccessHandler(jwtProvider))
+                                                .failureHandler(new FormLoginAuthenticationFailureHandler())
+                                                .loginProcessingUrl("/member/login")
+                                                .usernameParameter("email")
+                )
+                .exceptionHandling(
+                        configurer -> configurer.accessDeniedHandler(new JwtAccessDeniedHandler())
+                                                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                )
+                .addFilterBefore(
+                        new JwtAuthenticationFilter(jwtProvider),
+                        UsernamePasswordAuthenticationFilter.class
+                );
 
         return http.build();
     }

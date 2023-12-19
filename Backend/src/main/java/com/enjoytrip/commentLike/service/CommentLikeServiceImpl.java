@@ -1,5 +1,9 @@
 package com.enjoytrip.commentLike.service;
 
+import static com.enjoytrip.domain.exception.ExceptionMessage.COMMENTLIKE_NOT_FOUND;
+import static com.enjoytrip.domain.exception.ExceptionMessage.COMMENT_NOT_FOUND;
+import static com.enjoytrip.domain.exception.ExceptionMessage.MEMBER_NOT_FOUND;
+
 import com.enjoytrip.comment.repository.CommentRepository;
 import com.enjoytrip.commentLike.dto.CommentLikeRequstDto;
 import com.enjoytrip.commentLike.mapper.CommentLikeMapper;
@@ -16,12 +20,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.enjoytrip.domain.exception.ExceptionMessage.*;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class CommentLikeServiceImpl implements CommentLikeService{
+public class CommentLikeServiceImpl implements CommentLikeService {
 
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
@@ -32,14 +34,14 @@ public class CommentLikeServiceImpl implements CommentLikeService{
         CommentLikeId commentLikeId = CommentLikeMapper.toCommentLikeId(requestDto);
 
         return commentLikeRepository.findById(commentLikeId)
-                .map(CommentLike::isLiked)
-                .orElse(false);
+                                    .map(CommentLike::isLiked)
+                                    .orElse(false);
     }
 
     @Override
     public Integer getLikeCount(Long commentId) {
         commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
+                         .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
         return commentLikeRepository.countByCommentId(commentId);
     }
 
@@ -47,20 +49,20 @@ public class CommentLikeServiceImpl implements CommentLikeService{
     @Transactional
     public void likeComment(CommentLikeRequstDto requestDto) {
         Member member = memberRepository.findById(requestDto.getMemberId())
-                .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
+                                        .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
         Comment comment = commentRepository.findById(requestDto.getCommentId())
-                .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
+                                           .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
 
         CommentLikeId commentLikeId = CommentLikeMapper.toCommentLikeId(requestDto);
         CommentLike commentLike = commentLikeRepository.findById(commentLikeId)
-                .orElseGet(() ->commentLikeRepository.save(
-                        CommentLike.builder()
-                                .commentLikeId(commentLikeId)
-                                .member(member)
-                                .comment(comment)
-                                .isLiked(false)
-                                .build()
-                ));
+                                                       .orElseGet(() -> commentLikeRepository.save(
+                                                               CommentLike.builder()
+                                                                          .commentLikeId(commentLikeId)
+                                                                          .member(member)
+                                                                          .comment(comment)
+                                                                          .isLiked(false)
+                                                                          .build()
+                                                       ));
 
         commentLike.like();
     }
@@ -70,7 +72,8 @@ public class CommentLikeServiceImpl implements CommentLikeService{
     public void unlikeComment(CommentLikeRequstDto requestDto) {
         CommentLikeId commentLikeId = CommentLikeMapper.toCommentLikeId(requestDto);
         CommentLike commentLike = commentLikeRepository.findById(commentLikeId).
-                orElseThrow(() -> new CommentLikeNotFoundException(COMMENTLIKE_NOT_FOUND));
+                                                       orElseThrow(() -> new CommentLikeNotFoundException(
+                                                               COMMENTLIKE_NOT_FOUND));
 
         commentLike.unlike();
     }
