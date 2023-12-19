@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/{boardId}/comment")
+@RequestMapping("board/{boardId}/comment")
 public class CommentController {
 
     private final CommentService commentService;
@@ -30,8 +30,8 @@ public class CommentController {
     public List<CommentReadDto> getCommentByBoardId(@PathVariable Long boardId) {
         List<Comment> comments = commentService.getCommentByBoardId(boardId);
         return comments.stream().map(comment -> {
-            String nickname = memberService.getNicknameByMember(comment.getMember()); // nickname을 얻습니다.
-            return new CommentReadDto(nickname, comment.getContent()); // CommentReadDto를 생성합니다.
+            String nickname = memberService.getNicknameByMember(comment.getMember());
+            return new CommentReadDto(nickname, comment.getContent());
         }).collect(Collectors.toList());
     }
 
