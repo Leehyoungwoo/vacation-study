@@ -13,11 +13,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.enjoytrip.domain.exception.ExceptionMessage.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final MemberRepository memberRepository;
@@ -25,13 +27,11 @@ public class AuthService {
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
 
-    public void authenticatePassword(final Long id, final String password) {
+    public boolean authenticatePassword(final Long id, final String password) {
         final Member member = memberRepository.findById(id)
                                               .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
 
-        if (!passwordEncoder.matches(password, member.getPassword())) {
-            throw new BadCredentialsException("현재 비밀번호가 일치하지 않습니다.");
-        }
+        return passwordEncoder.matches(password, member.getPassword());
     }
 
     public boolean authorizeToUpdateBoard(Long memberId, Long boardId) {
