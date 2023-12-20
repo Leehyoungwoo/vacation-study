@@ -1,12 +1,8 @@
 package com.enjoytrip.member.service;
 
-import com.enjoytrip.domain.exception.DuplicatedNicknameException;
-import com.enjoytrip.domain.exception.MemberAlreadyExistsException;
 import com.enjoytrip.domain.exception.MemberNotFoundException;
 import com.enjoytrip.domain.model.entity.Member;
 import com.enjoytrip.member.dto.MemberCreateDto;
-import com.enjoytrip.member.dto.MemberPasswordUpdateDto;
-import com.enjoytrip.member.dto.UpdateNicknameDto;
 import com.enjoytrip.member.mapper.MemberMapper;
 import com.enjoytrip.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +21,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        System.out.println("로드메서드 사용하나?");
         return memberRepository.findByUsernameAndIsDeletedFalse(username)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
     }
 
     @Override
     public Member findMemberById(Long id) {
-        return memberRepository.findById(id)
+        return memberRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
     }
 
@@ -44,26 +39,23 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void joinMember(MemberCreateDto memberCreateDto) {
-        validateDuplicateUsername(memberCreateDto.getUsername());
-        validateDuplicateNickname(memberCreateDto.getNickname());
         Member newMember = MemberMapper.toEntity(memberCreateDto);
         memberRepository.save(newMember);
     }
 
     @Override
     @Transactional
-    public void updateNickName(Long id, UpdateNicknameDto updateNicknameDto) {
+    public void updateNickName(Long id, String newNickname) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
-        member.changeNickname(updateNicknameDto.getNewNickname());
+        member.changeNickname(newNickname);
     }
 
     @Override
     @Transactional
-    public void updatePassword(Long id, MemberPasswordUpdateDto memberPasswordUpdateDto) {
+    public void updatePassword(Long id, String newPassword) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
-        String newPassword = memberPasswordUpdateDto.getNewPassword();
         member.changePassword(newPassword);
     }
 
@@ -73,19 +65,5 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
         member.markAsDeleted();
-    }
-
-    private void validateDuplicateUsername(String username) {
-        memberRepository.findByUsername(username)
-                .ifPresent(m -> {
-                    throw new MemberAlreadyExistsException(MEMBER_ALREADY_EXISTS);
-                });
-    }
-
-    private void validateDuplicateNickname(String nickname) {
-        memberRepository.findMemberByNickname(nickname)
-                .ifPresent(m -> {
-                    throw new DuplicatedNicknameException(MEMBER_DUPLICATED_NICKNAME);
-                });
     }
 }

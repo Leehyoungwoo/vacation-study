@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -25,12 +26,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "members")
+@DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -42,24 +45,24 @@ public class Member implements UserDetails {
     private Long id;
 
     @NotNull
-    @NotEmpty
+    @NotBlank
     @Size(min = 6, max = 30)
     @Column(unique = true)
     private String username;
 
     @NotNull
-    @NotEmpty
+    @NotBlank
     @Size(min = 6)
     @Convert(converter = PasswordConverter.class)
     private String password;
 
     @NotNull
-    @NotEmpty
+    @NotBlank
     @Size(max = 20)
     private String name;
 
     @NotNull
-    @NotEmpty
+    @NotBlank
     @Size(max = 10)
     @Column(unique = true)
     private String nickname;
@@ -73,7 +76,7 @@ public class Member implements UserDetails {
     private boolean isDeleted;
 
     @PrePersist
-    public void validateUsernameFormat() {
+    public void prePersist() {
         if (!EmailValidator.getInstance().isValid(this.username)) {
             throw new InvalidEmailFormatException("이메일이 올바른 형식이 아닙니다.");
         }

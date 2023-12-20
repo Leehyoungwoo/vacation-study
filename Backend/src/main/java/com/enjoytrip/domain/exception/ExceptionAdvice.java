@@ -1,62 +1,55 @@
 package com.enjoytrip.domain.exception;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@Slf4j
 public class ExceptionAdvice {
 
-    @ExceptionHandler(InvalidEmailFormatException.class)
-    public ResponseEntity<String> handleInvalidEmailFormatException(InvalidEmailFormatException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(MemberNotFoundException.class)
-    public ResponseEntity<String> handleMemberNotFoundException(MemberNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
-
-    @ExceptionHandler(MemberAlreadyExistsException.class)
-    public ResponseEntity<String> handleMemberAlreadyExistsException(MemberAlreadyExistsException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-    }
-
-    @ExceptionHandler(DuplicatedNicknameException.class)
-    public ResponseEntity<String> handleDuplicateNicknameException(DuplicatedNicknameException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-    }
-
-    @ExceptionHandler(BoardNotFoundException.class)
-    public ResponseEntity<String> handleBoardNotFoundException(BoardNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidEmailFormatException.class,
+            DataIntegrityViolationException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleBadRequest(Exception e) {
+        return e.getMessage();
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public String handleUnauthorized(BadCredentialsException e) {
+        return e.getMessage();
     }
 
-    @ExceptionHandler(CommentNotFoundException.class)
-    public ResponseEntity<String> handleCommentNotFoundException(CommentNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public String handleForbidden(AccessDeniedException e) {
+        return e.getMessage();
     }
 
-    @ExceptionHandler(BoardLikeNotFoundException.class)
-    public ResponseEntity<String> handleBoardLikeNotFoundException(BoardLikeNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    @ExceptionHandler({MemberNotFoundException.class, BoardNotFoundException.class, CommentNotFoundException.class, BoardLikeNotFoundException.class, CommentLikeNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleNotFound(MemberNotFoundException e) {
+        return e.getMessage();
     }
 
-    @ExceptionHandler(CommentLikeNotFoundException.class)
-    public ResponseEntity<String> handleCommentLikeNotFoundException(CommentLikeNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    @ExceptionHandler({MemberAlreadyExistsException.class, DuplicatedNicknameException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleConflict(Exception e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleInternalServerError(Exception e) {
+        log.error("Occurred Error :: ", e);
+        return "페이지를 찾을 수 없습니다.";
     }
 }

@@ -14,10 +14,9 @@ public interface MemberService extends UserDetailsService {
 
     void joinMember(MemberCreateDto memberCreateDto);
 
-    void updateNickName(Long id, UpdateNicknameDto updateNicknameDto);
+    void updateNickName(Long id, String newNickname);
 
-    void updatePassword(Long id, MemberPasswordUpdateDto memberPasswordUpdateDto);
+    void updatePassword(Long id, String newPassword);
 
     void deleteMember(Long id);
-
 }

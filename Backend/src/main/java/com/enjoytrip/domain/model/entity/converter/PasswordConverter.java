@@ -1,18 +1,18 @@
 package com.enjoytrip.domain.model.entity.converter;
 
 import javax.persistence.AttributeConverter;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
-public class PasswordConverter implements AttributeConverter<String, String>, ApplicationContextAware {
+@Component
+@RequiredArgsConstructor
+public class PasswordConverter implements AttributeConverter<String, String> {
 
-    private PasswordEncoder passwordEncoder;
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        passwordEncoder = applicationContext.getBean(PasswordEncoder.class);
-    }
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public String convertToDatabaseColumn(String raw) {

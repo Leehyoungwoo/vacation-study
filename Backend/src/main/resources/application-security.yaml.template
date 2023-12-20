@@ -20,7 +20,7 @@ jwt:
 spring:
   config:
     activate:
-      on-profile: security-prob
+      on-profile: security-prod
 
 jwt:
   token-validity-in-seconds:
