@@ -1,1 +1,1 @@
-docker build -t vacation-study ..
+docker build --tag vacation-study --file ./Dockerfile ..
