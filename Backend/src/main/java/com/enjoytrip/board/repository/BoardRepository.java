@@ -12,8 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    @Query("SELECT b FROM Board b WHERE b.id = :id AND b.isDeleted = false")
-    Optional<Board> findById(@Param("id") Long id);
+    Optional<Board> findByIdAndIsDeletedFalse(Long id);
 
     Page<Board> findByIsDeletedFalse(Pageable pageable);
 

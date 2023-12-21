@@ -30,7 +30,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardReadDto readBoard(Long boardId) {
-        Board board = boardRepository.findById(boardId)
+        Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
         return new BoardReadDto(board);
     }
@@ -44,7 +44,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long writeBoard(BoardWriteDto boardWriteDto) {
-        Member member = memberRepository.findById(boardWriteDto.getMemberId())
+        Member member = memberRepository.findByIdAndIsDeletedFalse(boardWriteDto.getMemberId())
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
         Board saveBoard = boardRepository.save(BoardMapper.toEntity(boardWriteDto, member));
         return saveBoard.getId();
@@ -53,7 +53,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public void updateBoard(Long boardId, BoardUpdateDto updateDto, Long memberId) {
-        Board board = boardRepository.findById(boardId)
+        Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
         board.update(updateDto);
     }
@@ -61,7 +61,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public void deleteBoard(Long boardId, Long memberId) {
-        Board board = boardRepository.findById(boardId)
+        Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
         board.markAsDeleted();
     }

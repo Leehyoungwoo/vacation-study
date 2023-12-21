@@ -29,7 +29,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public List<Comment> getCommentByBoardId(Long boardId) {
-        boardRepository.findById(boardId)
+        boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
         return commentRepository.findByBoardIdAndIsDeletedFalse(boardId);
     }
@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService{
     @Override
     @Transactional
     public void writeComment(CommentWriteDto commentWriteDto, Member member) {
-        Board board = boardRepository.findById(commentWriteDto.getBoardId())
+        Board board = boardRepository.findByIdAndIsDeletedFalse(commentWriteDto.getBoardId())
                 .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
         commentRepository.save(CommentMapper.toEntity(commentWriteDto, member, board));
     }
@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService{
     @Override
     @Transactional
     public void updateComment(UpdateCommentDto updateCommentDto) {
-        Comment comment = commentRepository.findById(updateCommentDto.getId())
+        Comment comment = commentRepository.findByIdAndIsDeletedFalse(updateCommentDto.getId())
                 .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
         comment.updateComments(updateCommentDto);
     }
@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService{
     @Override
     @Transactional
     public void deleteComment(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
+        Comment comment = commentRepository.findByIdAndIsDeletedFalse(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
         comment.markAsDeleted();
     }

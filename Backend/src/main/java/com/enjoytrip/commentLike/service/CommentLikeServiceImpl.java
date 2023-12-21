@@ -38,7 +38,7 @@ public class CommentLikeServiceImpl implements CommentLikeService{
 
     @Override
     public Integer getLikeCount(Long commentId) {
-        commentRepository.findById(commentId)
+        commentRepository.findByIdAndIsDeletedFalse(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
         return commentLikeRepository.countByCommentId(commentId);
     }
@@ -46,9 +46,9 @@ public class CommentLikeServiceImpl implements CommentLikeService{
     @Override
     @Transactional
     public void likeComment(CommentLikeRequstDto requestDto) {
-        Member member = memberRepository.findById(requestDto.getMemberId())
+        Member member = memberRepository.findByIdAndIsDeletedFalse(requestDto.getMemberId())
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
-        Comment comment = commentRepository.findById(requestDto.getCommentId())
+        Comment comment = commentRepository.findByIdAndIsDeletedFalse(requestDto.getCommentId())
                 .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
 
         CommentLikeId commentLikeId = CommentLikeMapper.toCommentLikeId(requestDto);

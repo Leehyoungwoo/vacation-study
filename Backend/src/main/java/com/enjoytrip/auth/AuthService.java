@@ -27,21 +27,21 @@ public class AuthService {
     private final CommentRepository commentRepository;
 
     public boolean authenticatePassword(final Long id, final String password) {
-        final Member member = memberRepository.findById(id)
+        final Member member = memberRepository.findByIdAndIsDeletedFalse(id)
                                               .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
 
         return passwordEncoder.matches(password, member.getPassword());
     }
 
     public boolean authorizeToUpdateBoard(Long memberId, Long boardId) {
-        Board board = boardRepository.findById(boardId)
+        Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
 
         return board.isWrittenByTargetMember(memberId) || isAdminRole(memberId);
     }
 
     public boolean authorizeToUpdateComment(Long memberId, Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
+        Comment comment = commentRepository.findByIdAndIsDeletedFalse(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
 
         return comment.isWrittenByTargetMember(memberId) || isAdminRole(memberId);
@@ -49,7 +49,7 @@ public class AuthService {
 
     private boolean isAdminRole(Long memberId) {
 
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
 
         return member.getAuthorities().stream()

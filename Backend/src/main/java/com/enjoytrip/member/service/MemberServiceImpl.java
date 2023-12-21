@@ -46,7 +46,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void updateNickName(Long id, String newNickname) {
-        Member member = memberRepository.findById(id)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
         member.changeNickname(newNickname);
     }
@@ -54,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void updatePassword(Long id, String newPassword) {
-        Member member = memberRepository.findById(id)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
         member.changePassword(newPassword);
     }
@@ -62,7 +62,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void deleteMember(Long id) {
-        Member member = memberRepository.findById(id)
+        Member member = memberRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
         member.markAsDeleted();
     }

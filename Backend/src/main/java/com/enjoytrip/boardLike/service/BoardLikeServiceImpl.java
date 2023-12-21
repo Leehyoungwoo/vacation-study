@@ -46,9 +46,9 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     @Transactional
     public void likeBoard(BoardLikeRequestDto requestDto) {
         // 유효성 검사
-        Member member = memberRepository.findById(requestDto.getMemberId())
+        Member member = memberRepository.findByIdAndIsDeletedFalse(requestDto.getMemberId())
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
-        Board board = boardRepository.findById(requestDto.getBoardId())
+        Board board = boardRepository.findByIdAndIsDeletedFalse(requestDto.getBoardId())
                 .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
 
         BoardLikeId boardLikeId = BoardLikeMapper.toBoardLikeId(requestDto);
