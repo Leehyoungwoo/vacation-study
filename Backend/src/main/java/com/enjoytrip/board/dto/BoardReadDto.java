@@ -1,29 +1,20 @@
 package com.enjoytrip.board.dto;
 
-import com.enjoytrip.domain.model.entity.Board;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class BoardReadDto {
 
-    private String title;
+    private final String title;
 
-    private String content;
+    private final String content;
 
-    private Timestamp currentTime;
+    private final Timestamp currentTime;
 
-    private String author;
-
-    public BoardReadDto(Board board) {
-        this.title = board.getTitle();
-        this.content = board.getContent();
-        this.currentTime = board.getCurrentTime();
-        this.author = board.getMember().getName();
-    }
-
+    private final String author;
 }

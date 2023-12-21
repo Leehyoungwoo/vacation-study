@@ -3,8 +3,7 @@ package com.enjoytrip.domain.model.entity;
 import com.enjoytrip.board.dto.BoardUpdateDto;
 import java.sql.Timestamp;
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,13 +25,11 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @NotEmpty
+    @NotBlank
     @Size(max = 50)
     private String title;
 
-    @NotNull
-    @NotEmpty
+    @NotBlank
     @Size(max = 1000)
     private String content;
 

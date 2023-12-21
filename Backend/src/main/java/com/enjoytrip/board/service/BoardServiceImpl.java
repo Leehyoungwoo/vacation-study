@@ -52,7 +52,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public void updateBoard(Long boardId, BoardUpdateDto updateDto, Long memberId) {
+    public void updateBoard(Long boardId, BoardUpdateDto updateDto) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
         board.update(updateDto);
@@ -60,7 +60,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public void deleteBoard(Long boardId, Long memberId) {
+    public void deleteBoard(Long boardId) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
         board.markAsDeleted();
