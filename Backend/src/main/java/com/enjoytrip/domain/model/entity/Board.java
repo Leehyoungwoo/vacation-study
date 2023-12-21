@@ -58,4 +58,8 @@ public class Board {
         this.title = boardUpdateDto.getTitle();
         this.content = boardUpdateDto.getContent();
     }
+
+    public boolean isWrittenByTargetMember(Long memberId) {
+        return this.member.getId().equals(memberId);
+    }
 }

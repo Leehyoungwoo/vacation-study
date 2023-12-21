@@ -51,4 +51,8 @@ public class Comment {
     public void updateComments(UpdateCommentDto updateCommentDto) {
         this.content = updateCommentDto.getContent();
     }
+
+    public boolean isWrittenByTargetMember(Long memberId) {
+        return this.member.getId().equals(memberId);
+    }
 }

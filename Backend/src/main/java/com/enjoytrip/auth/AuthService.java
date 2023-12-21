@@ -10,7 +10,6 @@ import com.enjoytrip.domain.model.entity.Comment;
 import com.enjoytrip.domain.model.entity.Member;
 import com.enjoytrip.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,16 +37,14 @@ public class AuthService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
 
-        boolean hasAdminRole = isAdminRole(memberId);
-
-        return board.getMember().getId().equals(memberId) || hasAdminRole;
+        return board.isWrittenByTargetMember(memberId) || isAdminRole(memberId);
     }
 
-    public boolean authorizeToUpdateComment(Long userId, Long commentId) {
+    public boolean authorizeToUpdateComment(Long memberId, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
 
-        return comment.getMember().getId().equals(userId) || isAdminRole(userId);
+        return comment.isWrittenByTargetMember(memberId) || isAdminRole(memberId);
     }
 
     private boolean isAdminRole(Long memberId) {
@@ -58,5 +55,4 @@ public class AuthService {
         return member.getAuthorities().stream()
                 .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
     }
-
 }
