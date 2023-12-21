@@ -25,5 +25,6 @@ public class MemberCreateDto {
     private final String nickname;
 
     @NotBlank
+    @Size(min = 6, max = 15)
     private String password;
 }

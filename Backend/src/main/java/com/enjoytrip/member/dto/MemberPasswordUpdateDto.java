@@ -14,11 +14,11 @@ public class MemberPasswordUpdateDto {
 
     @NotNull
     @NotEmpty
-    @Size(min = 6)
+    @Size(min = 6, max = 15)
     private String currentPassword;
 
     @NotNull
     @NotEmpty
-    @Size(min = 6)
+    @Size(min = 6, max = 15)
     private String newPassword;
 }

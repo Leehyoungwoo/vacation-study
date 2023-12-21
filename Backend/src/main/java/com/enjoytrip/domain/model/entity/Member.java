@@ -1,5 +1,7 @@
 package com.enjoytrip.domain.model.entity;
 
+import com.enjoytrip.domain.exception.ExceptionMessage;
+import com.enjoytrip.domain.exception.IllegalPasswordException;
 import com.enjoytrip.domain.exception.InvalidEmailFormatException;
 import com.enjoytrip.domain.model.entity.converter.PasswordConverter;
 import com.enjoytrip.domain.model.type.Role;
@@ -17,10 +19,10 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.enjoytrip.util.PasswordValidator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +32,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import static com.enjoytrip.domain.exception.ExceptionMessage.PASSWORD_ILLEGAL;
 
 @Entity
 @Table(name = "members")
@@ -87,6 +91,9 @@ public class Member implements UserDetails {
     }
 
     public void changePassword(String newPassword) {
+        if (!PasswordValidator.isValidPassword(newPassword)) {
+            throw new IllegalPasswordException(PASSWORD_ILLEGAL);
+        }
         this.password = newPassword;
     }
 
@@ -97,7 +104,6 @@ public class Member implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
-
     }
 
     @Override

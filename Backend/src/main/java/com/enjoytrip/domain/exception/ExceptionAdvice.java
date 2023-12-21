@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionAdvice {
 
     @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidEmailFormatException.class,
-            DataIntegrityViolationException.class})
+            DataIntegrityViolationException.class, IllegalPasswordException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleBadRequest(Exception e) {
         return e.getMessage();
