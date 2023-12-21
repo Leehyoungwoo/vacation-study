@@ -80,7 +80,6 @@ public class JwtProvider {
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority))
                         .collect(Collectors.toCollection(ArrayList::new));
-        System.out.println(authorities);
         Long id = Long.parseLong(claims.get("id").toString());
         String nickname = claims.get("nickname").toString();
         String authority = getAuthorities(token).get(0).getAuthority().substring(5);
@@ -153,6 +152,7 @@ public class JwtProvider {
         } catch (IllegalArgumentException e) {
             System.out.println("JWT 토큰이 비어있습니다.");
         }
+
         return false;
     }
 }
