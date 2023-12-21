@@ -78,8 +78,9 @@ public class JwtProvider {
 
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
+                        .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority))
                         .collect(Collectors.toCollection(ArrayList::new));
+        System.out.println(authorities);
         Long id = Long.parseLong(claims.get("id").toString());
         String nickname = claims.get("nickname").toString();
         String authority = getAuthorities(token).get(0).getAuthority().substring(5);
