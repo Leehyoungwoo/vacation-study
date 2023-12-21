@@ -47,6 +47,20 @@ public class AuthService {
         return comment.isWrittenByTargetMember(memberId) || isAdminRole(memberId);
     }
 
+    public boolean authorizeToLikeBoard(Long memberId, Long boardId) {
+        Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
+                .orElseThrow(() -> new BoardNotFoundException(BOARD_NOT_FOUND));
+
+        return !board.isWrittenByTargetMember(memberId);
+    }
+
+    public boolean authorizeToLikeComment(Long memberId, Long commentId) {
+        Comment comment = commentRepository.findByIdAndIsDeletedFalse(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
+
+        return !comment.isWrittenByTargetMember(memberId);
+    }
+
     private boolean isAdminRole(Long memberId) {
 
         Member member = memberRepository.findByIdAndIsDeletedFalse(memberId)

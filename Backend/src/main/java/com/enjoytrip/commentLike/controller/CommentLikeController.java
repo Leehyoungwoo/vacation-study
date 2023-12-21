@@ -5,6 +5,7 @@ import com.enjoytrip.commentLike.service.CommentLikeService;
 import com.enjoytrip.domain.model.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,7 @@ public class CommentLikeController {
 
     @PostMapping("/like")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("authService.authorizeToLikeComment(#userDetails.getId(), #commentId)")
     public void likeComment(@PathVariable Long commentId, @AuthenticationPrincipal Member userDetails) {
         Long memberId = userDetails.getId();
         CommentLikeRequstDto requstDto = CommentLikeRequstDto.builder()
@@ -45,6 +47,7 @@ public class CommentLikeController {
 
     @DeleteMapping("/unlike")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("authService.authorizeToLikeComment(#userDetails.getId(), #commentId)")
     public void unlikeComment(@PathVariable Long commentId, @AuthenticationPrincipal Member userDetails) {
         Long memberId = userDetails.getId();
         CommentLikeRequstDto requstDto = CommentLikeRequstDto.builder()

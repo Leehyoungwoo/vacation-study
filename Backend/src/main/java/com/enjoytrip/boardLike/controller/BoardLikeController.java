@@ -5,6 +5,7 @@ import com.enjoytrip.boardLike.service.BoardLikeService;
 import com.enjoytrip.domain.model.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,7 @@ public class BoardLikeController {
 
     @PostMapping("/like")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("@authService.authorizeToLikeBoard(#userDetails.getId(), #boardId)")
     public void likeBoard(@PathVariable Long boardId, @AuthenticationPrincipal Member userDetails) {
         Long memberId = userDetails.getId();
         BoardLikeRequestDto requestDto = BoardLikeRequestDto.builder()
@@ -45,6 +47,7 @@ public class BoardLikeController {
 
     @DeleteMapping("/unlike")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("@authService.authorizeToLikeBoard(#userDetails.getId(), #boardId)")
     public void unlikeBaord(@PathVariable Long boardId, @AuthenticationPrincipal Member userDetails) {
         Long memberId = userDetails.getId();
         BoardLikeRequestDto requestDto = BoardLikeRequestDto.builder()
