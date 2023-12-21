@@ -69,25 +69,24 @@ public class JwtProvider {
                 .compact();
     }
 
-//    public Authentication getAuthentication(String token) {
-//        Claims claims = Jwts.parserBuilder()
-//                .setSigningKey(key)
-//                .build()
-//                .parseClaimsJws(token)
-//                .getBody();
-//
-//        Collection<? extends GrantedAuthority> authorities =
-//                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-//                        .map(SimpleGrantedAuthority::new)
-//                        .collect(Collectors.toCollection(ArrayList::new));
-//        Long id = Long.parseLong(claims.get("id").toString());
-//        String nickname = claims.get("nickname").toString();
-//        String authority = authorities
-//        Member principal = new Member(id, "", "", "", nickname, Role.valueOf(authority), false);
-//
-//
-//        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
-//    }
+    public Authentication getAuthentication(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toCollection(ArrayList::new));
+        Long id = Long.parseLong(claims.get("id").toString());
+        String nickname = claims.get("nickname").toString();
+        String authority = getAuthorities(token).get(0).getAuthority().substring(5);
+        Member principal = new Member(id, "", "", "", nickname, Role.valueOf(authority), false);
+
+        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+    }
 
     public String getNicknameFromToken(String token) {
         return Jwts.parserBuilder()
@@ -134,7 +133,7 @@ public class JwtProvider {
             return bearerToken.replace("Bearer ", "");
         }
 
-        return null;
+        return bearerToken;
     }
 
     public boolean validateToken(String token) {
