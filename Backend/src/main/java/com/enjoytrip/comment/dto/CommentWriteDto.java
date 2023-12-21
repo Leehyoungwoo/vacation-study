@@ -12,9 +12,12 @@ import javax.validation.constraints.Size;
 public class CommentWriteDto {
 
     @NotBlank
-    @Size(max = 20)
+    @Size(max = 200)
     private String content;
 
     @Setter
     private Long boardId;
+
+    @Setter
+    private Long memberId;
 }

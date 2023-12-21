@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
@@ -33,8 +32,7 @@ public class Comment {
     @JoinColumn(name="board_id")
     private Board board;
 
-    @NotNull
-    @NotEmpty
+    @NotBlank
     @Size(max = 200)
     private String content;
 

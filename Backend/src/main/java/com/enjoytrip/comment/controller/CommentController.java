@@ -23,16 +23,11 @@ import java.util.stream.Collectors;
 public class CommentController {
 
     private final CommentService commentService;
-    private final MemberService memberService;
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<CommentReadDto> getCommentByBoardId(@PathVariable Long boardId) {
-        List<Comment> comments = commentService.getCommentByBoardId(boardId);
-        return comments.stream().map(comment -> {
-            String nickname = memberService.getNicknameByMember(comment.getMember());
-            return new CommentReadDto(nickname, comment.getContent());
-        }).collect(Collectors.toList());
+        return commentService.getCommentByBoardId(boardId);
     }
 
     @PostMapping
@@ -41,7 +36,8 @@ public class CommentController {
                                @RequestBody @Valid CommentWriteDto commentWriteDto,
                                @AuthenticationPrincipal Member member) {
         commentWriteDto.setBoardId(boardId);
-        commentService.writeComment(commentWriteDto, member);
+        commentWriteDto.setMemberId(member.getId());
+        commentService.writeComment(commentWriteDto);
     }
 
     @PutMapping("/{commentId}")

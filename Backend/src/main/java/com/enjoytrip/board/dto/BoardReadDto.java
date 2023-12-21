@@ -3,11 +3,9 @@ package com.enjoytrip.board.dto;
 import com.enjoytrip.domain.model.entity.Board;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
