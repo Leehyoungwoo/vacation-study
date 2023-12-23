@@ -3,12 +3,10 @@ package com.enjoytrip.board.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardWriteDto {
